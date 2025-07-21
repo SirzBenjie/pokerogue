@@ -60,6 +60,7 @@
         "./src/system/version-migration/*.ts",
         "./src/system/*.ts"
       ],
+      "#schemas/*": ["./system/schemas/*.ts", "./system/schemas/v1.10/*.ts"],
       "#trainers/*": ["./src/data/trainers/*.ts"],
       "#types/*": ["./src/@types/*.ts"],
       "#ui/*": [
