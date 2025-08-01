@@ -1,8 +1,15 @@
-import type { AbilityBattlerTag, BattlerTagTypeMap, SerializableBattlerTag, TypeBoostTag } from "#data/battler-tags";
+import type {
+  AbilityBattlerTag,
+  BattlerTag,
+  BattlerTagTypeMap,
+  SerializableBattlerTag,
+  TypeBoostTag,
+} from "#data/battler-tags";
 import type { AbilityId } from "#enums/ability-id";
 import type { BattlerTagType } from "#enums/battler-tag-type";
+import type { MoveId } from "#enums/move-id";
 import type { SessionSaveData } from "#types/save-data";
-import type { InferKeys, ObjectValues } from "#types/type-helpers";
+import type { InferKeys, MatchShape, ObjectValues } from "#types/type-helpers";
 
 /**
  * Subset of {@linkcode BattlerTagType}s that restrict the use of moves.
@@ -89,7 +96,9 @@ export type AbilityBattlerTagType =
   | BattlerTagType.TRUANT
   | BattlerTagType.SUPREME_OVERLORD;
 
-/** Subset of {@linkcode BattlerTagType}s that provide type boosts */
+/**
+ * Subset of {@linkcode BattlerTagType}s that provide type boosts
+ */
 export type TypeBoostTagType = BattlerTagType.FIRE_BOOST | BattlerTagType.CHARGED;
 
 /** Subset of {@linkcode BattlerTagType}s that boost the user's critical stage */
@@ -136,8 +145,19 @@ export type BattlerTagData = ObjectValues<BattlerTagDataMap>;
 
 /**
  * Subset of {@linkcode BattlerTagType}s whose associated `BattlerTag` adds a serializable `moveId` field
+ * (and no other serialized fields).
+ *
+ * @remarks
+ * Intended to be used to simplify type safety in the zod schemas.
  */
-export type BattlerTagTypeWithMoveId = BattlerTagType.DISABLED | BattlerTagType.GORILLA_TACTICS | BattlerTagType.ENCORE;
+export type BattlerTagTypeWithMoveId = keyof {
+  [K in SerializableBattlerTagType as MatchShape<
+    Parameters<BattlerTagTypeMap[K]["loadTag"]>[0],
+    Parameters<BattlerTag["loadTag"]>[0] & { moveId: MoveId }
+  > extends never
+    ? never
+    : K]: any;
+};
 
 /**
  * Dummy, typescript-only declaration to ensure that
