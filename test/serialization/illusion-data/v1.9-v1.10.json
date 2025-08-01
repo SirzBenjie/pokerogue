@@ -1,0 +1,75 @@
+[
+  {
+    "testName": "when fusionSpecies is defined",
+    "$input": {
+      "basePokemon": { "name": "Zorua", "shiny": true, "variant": 2 },
+      "species": 56,
+      "formIndex": 0,
+      "gender": 0,
+      "pokeball": 0,
+      "fusionFormIndex": 0,
+      "fusionSpecies": {
+        "type1": 11,
+        "type2": 3,
+        "height": 0.7,
+        "weight": 6.9,
+        "ability1": 65,
+        "ability2": 65,
+        "abilityHidden": 34,
+        "baseTotal": 318,
+        "baseStats": [45, 49, 49, 65, 65, 45],
+        "catchRate": 45,
+        "baseFriendship": 50,
+        "baseExp": 64,
+        "genderDiffs": false,
+        "isStarterSelectable": false,
+        "speciesId": 1,
+        "_formIndex": 0,
+        "_generation": 1,
+        "subLegendary": false,
+        "legendary": false,
+        "mythical": false,
+        "species": "Seed Pokémon",
+        "growthRate": 3,
+        "malePercent": 87.5,
+        "canChangeForm": false,
+        "forms": [],
+        "name": "Bulbasaur"
+      },
+      "fusionGender": 0
+    },
+    "$output": {
+      "species": 56,
+      "formIndex": 0,
+      "gender": 0,
+      "pokeball": 0,
+      "fusionFormIndex": 0,
+      "fusionSpecies": 1,
+      "fusionGender": 0,
+      "fusionVariant": 0,
+      "fusionShiny": false,
+      "name": "Mankey",
+      "shiny": false,
+      "variant": 0
+    }
+  },
+  {
+    "testName": "when fusionSpecies is undefined",
+    "$input": {
+      "basePokemon": { "name": "Zorua", "shiny": true, "variant": 2 },
+      "species": 56,
+      "formIndex": 0,
+      "gender": 0,
+      "pokeball": 0
+    },
+    "$output": {
+      "species": 56,
+      "formIndex": 0,
+      "gender": 0,
+      "pokeball": 0,
+      "name": "Mankey",
+      "shiny": false,
+      "variant": 0
+    }
+  }
+]
