@@ -1,9 +1,9 @@
-import { loadBattlerTag } from "#data/battler-tags";
 import { BattlerTagType } from "#enums/battler-tag-type";
+import { MoveId } from "#enums/move-id";
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import { Z$BattlerIndex } from "#system/schemas/pokemon/battler-index";
 import { Z$Stat } from "#system/schemas/pokemon/pokemon-stats";
-import type { BasicBattlerTag, BattlerTagTypeWithMoveId, HighestStatBoostTagType } from "#types/battler-tags";
+import type { BasicBattlerTagType, BattlerTagTypeWithMoveId, HighestStatBoostTagType } from "#types/battler-tags";
 import type { DiscriminatedUnionFake } from "#types/schema-helpers";
 import { z } from "zod";
 
@@ -16,7 +16,7 @@ as we need to have schemas for each subclass that has a different shape.
  * Zod enum of {@linkcode BattlerTagType}s whose associated `BattlerTag` adds no
  * additional fields that are serialized.
  */
-const BasicBattlerTag = z.literal([
+const Z$BasicBattlerTag = z.literal([
   BattlerTagType.RECHARGING,
   BattlerTagType.CONFUSED,
   BattlerTagType.INFATUATED,
@@ -46,7 +46,6 @@ const BasicBattlerTag = z.literal([
   BattlerTagType.UNDERWATER,
   BattlerTagType.HIDDEN,
   BattlerTagType.FIRE_BOOST,
-  BattlerTagType.CRIT_BOOST,
   BattlerTagType.ALWAYS_CRIT,
   BattlerTagType.IGNORE_ACCURACY,
   BattlerTagType.IGNORE_FLYING,
@@ -64,7 +63,6 @@ const BasicBattlerTag = z.literal([
   BattlerTagType.IGNORE_DARK,
   BattlerTagType.GULP_MISSILE_ARROKUDA,
   BattlerTagType.GULP_MISSILE_PIKACHU,
-  BattlerTagType.DRAGON_CHEER,
   BattlerTagType.NO_RETREAT,
   BattlerTagType.UNBURDEN,
   BattlerTagType.THROAT_CHOPPED,
@@ -79,10 +77,10 @@ const BasicBattlerTag = z.literal([
   BattlerTagType.SYRUP_BOMB,
   BattlerTagType.TELEKINESIS,
   BattlerTagType.GRUDGE,
-] satisfies BasicBattlerTag[]);
+] satisfies BasicBattlerTagType[]);
 
 const Z$BaseBattlerTag = z.object({
-  turnCount: Z$PositiveInt,
+  turnCount: z.int(),
   // Source move can be `none` for tags not applied by move, so allow `0` here.
   sourceMove: Z$NonNegativeInt.optional().catch(undefined),
   sourceId: z.int().optional().catch(undefined),
@@ -90,7 +88,7 @@ const Z$BaseBattlerTag = z.object({
 
 const Z$BaseTagWithMoveId = z.object({
   ...Z$BaseBattlerTag.shape,
-  moveId: Z$PositiveInt,
+  moveId: Z$NonNegativeInt,
 });
 
 /**
@@ -99,8 +97,14 @@ const Z$BaseTagWithMoveId = z.object({
  */
 const Z$PlainBattlerTag = z.object({
   ...Z$BaseBattlerTag.shape,
-  tagType: BasicBattlerTag,
-}) as DiscriminatedUnionFake<BasicBattlerTag, typeof Z$PlainBattlerTag.shape, "tagType">;
+  tagType: Z$BasicBattlerTag,
+}) as DiscriminatedUnionFake<BasicBattlerTagType, typeof Z$PlainBattlerTag.shape, "tagType">;
+
+const Z$CritBoostTag = z.object({
+  ...Z$BaseBattlerTag.shape,
+  tagType: z.literal([BattlerTagType.CRIT_BOOST, BattlerTagType.DRAGON_CHEER]),
+  critStages: Z$PositiveInt.catch(1),
+});
 
 /** Subset of battler tags that have a moveID field */
 const Z$TagWithMoveId = z.object({
@@ -110,7 +114,7 @@ const Z$TagWithMoveId = z.object({
     BattlerTagType.GORILLA_TACTICS,
     BattlerTagType.ENCORE,
   ] satisfies BattlerTagTypeWithMoveId[]),
-  moveId: Z$PositiveInt,
+  moveId: Z$NonNegativeInt.catch(MoveId.NONE),
 }) as DiscriminatedUnionFake<BattlerTagTypeWithMoveId, typeof Z$TagWithMoveId.shape, "tagType">;
 
 /**
@@ -145,7 +149,7 @@ const Z$CommandedTag = z.object({
 const Z$StockpilingTag = z.object({
   ...Z$BaseBattlerTag.shape,
   tagType: z.literal(BattlerTagType.STOCKPILING),
-  stockpiledCount: Z$PositiveInt.catch(1),
+  stockpiledCount: Z$NonNegativeInt.catch(1),
   statChangeCounts: z.object({
     [2]: z.int().min(-6).max(6).catch(0), // Defense
     [4]: z.int().min(-6).max(6).catch(0), // Special Defense
@@ -155,7 +159,7 @@ const Z$StockpilingTag = z.object({
 const Z$AutotomizedTag = z.object({
   ...Z$BaseBattlerTag.shape,
   tagType: z.literal(BattlerTagType.AUTOTOMIZED),
-  autotomizeCount: Z$PositiveInt.catch(1),
+  autotomizeCount: Z$NonNegativeInt.catch(1),
 });
 
 const Z$SubstituteTag = z.object({
@@ -164,10 +168,14 @@ const Z$SubstituteTag = z.object({
   // hp: Z$PositiveInt,
 });
 
-export const Z$BattlerTag = z.discriminatedUnion("tagType", [Z$SubstituteTag]);
-
-declare const t: any;
-
-const o = Z$BattlerTag.parse(t);
-
-const r = loadBattlerTag(Z$SubstituteTag.parse(t));
+export const Z$BattlerTag = z.discriminatedUnion("tagType", [
+  Z$SubstituteTag,
+  Z$AutotomizedTag,
+  Z$StockpilingTag,
+  Z$CommandedTag,
+  Z$CritBoostTag,
+  Z$HighestStatBoostTag,
+  Z$SeedTag,
+  Z$TagWithMoveId,
+  Z$PlainBattlerTag,
+]);
