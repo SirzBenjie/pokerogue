@@ -88,7 +88,7 @@ const Z$BaseBattlerTag = z.object({
 
 const Z$BaseTagWithMoveId = z.object({
   ...Z$BaseBattlerTag.shape,
-  moveId: Z$NonNegativeInt,
+  moveId: Z$NonNegativeInt.optional().catch(MoveId.NONE),
 });
 
 /**

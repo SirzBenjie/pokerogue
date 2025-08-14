@@ -1,6 +1,6 @@
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
+import { Z$PokeballType } from "#system/schemas/pokeball-type";
 import { Z$Gender } from "#system/schemas/pokemon/pokemon-gender";
-import { Z$PokeballType } from "#system/schemas/v1.10/pokeball-type";
 import { z } from "zod";
 
 // TODO: Write migrator for illusion data's fusionSpecies field

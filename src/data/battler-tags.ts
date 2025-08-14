@@ -59,7 +59,7 @@ import { SpeciesFormChangeAbilityTrigger } from "#data/form-change-triggers";
 import { getStatusEffectHealText } from "#data/status-effect";
 import { TerrainType } from "#data/terrain";
 import { AbilityId } from "#enums/ability-id";
-import type { BattlerIndex } from "#enums/battler-index";
+import { BattlerIndex } from "#enums/battler-index";
 import { BattlerTagLapseType, type NonCustomBattlerTagLapseType } from "#enums/battler-tag-lapse-type";
 import { BattlerTagType } from "#enums/battler-tag-type";
 import { HitResult } from "#enums/hit-result";
@@ -118,7 +118,7 @@ interface BaseBattlerTag {
 /**
  * A {@linkcode BattlerTag} represents a semi-persistent effect that can be attached to a {@linkcode Pokemon}.
  * Tags can trigger various effects throughout a turn, and are cleared on switching out
- * or through their respective {@linkcode BattlerTag.lapse | lapse} methods.
+ * or through their respective {@linkcode BattlerTag#lapse | lapse} methods.
  */
 export class BattlerTag implements BaseBattlerTag {
   public readonly tagType: BattlerTagType;
@@ -1051,6 +1051,7 @@ export class SeedTag extends SerializableBattlerTag {
 
   constructor(sourceId: number) {
     super(BattlerTagType.SEEDED, BattlerTagLapseType.TURN_END, 1, MoveId.LEECH_SEED, sourceId, true);
+    this.sourceIndex = BattlerIndex.ATTACKER;
   }
 
   /**
@@ -1281,6 +1282,7 @@ export class EncoreTag extends MoveRestrictionBattlerTag {
 
   constructor(sourceId: number) {
     super(BattlerTagType.ENCORE, BattlerTagLapseType.AFTER_MOVE, 3, MoveId.ENCORE, sourceId);
+    this.moveId = MoveId.NONE; // Default value, will be set in canAdd()
   }
 
   public override loadTag(source: BaseBattlerTag & Pick<EncoreTag, "tagType" | "moveId">): void {

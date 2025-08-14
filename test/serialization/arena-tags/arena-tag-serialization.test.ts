@@ -3,7 +3,6 @@ import { ArenaTagSide } from "#enums/arena-tag-side";
 import { ArenaTagType } from "#enums/arena-tag-type";
 import { MoveId } from "#enums/move-id";
 import { Z$ArenaTag } from "#system/schemas/arena/arena-tag";
-import test from "node:test";
 import { describe, expect, it } from "vitest";
 
 describe("Serialization - Arena Tags", () => {
