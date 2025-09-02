@@ -7,6 +7,19 @@ import { applyChallenges } from "#utils/challenge-utils";
 import { BooleanHolder, toDmgValue } from "#utils/common";
 import i18next from "i18next";
 
+export interface SerializedPokemonMove {
+  /** The underlying move */
+  moveId: MoveId;
+  /** The amount of pp consumed by the move */
+  ppUsed: number;
+  /**The amount of pp ups that have been applied to this move */
+  ppUp: number;
+  /**
+   * If defined and nonzero, overrides the maximum PP of the move (e.g., due to move being copied by Transform).
+   * This also nullifies all effects of `ppUp`.
+   */
+  maxPpOverride?: number;
+}
 /**
  * Wrapper class for the {@linkcode Move} class for Pokemon to interact with.
  * These are the moves assigned to a {@linkcode Pokemon} object.
@@ -20,15 +33,10 @@ import i18next from "i18next";
  * @see {@linkcode getPpRatio} - returns the current PP amount / max PP amount.
  * @see {@linkcode getName} - returns name of {@linkcode Move}.
  */
-export class PokemonMove {
+export class PokemonMove implements SerializedPokemonMove {
   public moveId: MoveId;
   public ppUsed: number;
   public ppUp: number;
-
-  /**
-   * If defined and nonzero, overrides the maximum PP of the move (e.g., due to move being copied by Transform).
-   * This also nullifies all effects of `ppUp`.
-   */
   public maxPpOverride?: number;
 
   constructor(moveId: MoveId, ppUsed = 0, ppUp = 0, maxPpOverride?: number) {
@@ -126,7 +134,7 @@ export class PokemonMove {
    * @param source The data for the move to copy; can be a {@linkcode PokemonMove} or JSON object representing one
    * @returns A valid {@linkcode PokemonMove} object
    */
-  static loadMove(source: PokemonMove | any): PokemonMove {
+  static loadMove(source: SerializedPokemonMove): PokemonMove {
     return new PokemonMove(source.moveId, source.ppUsed, source.ppUp, source.maxPpOverride);
   }
 }

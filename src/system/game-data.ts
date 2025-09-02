@@ -816,7 +816,7 @@ export class GameData {
       trainer:
         globalScene.currentBattle.battleType === BattleType.TRAINER
           ? new TrainerData(globalScene.currentBattle.trainer)
-          : null,
+          : undefined,
       gameVersion: globalScene.game.config.gameVersion,
       timestamp: Date.now(),
       challenges: globalScene.gameMode.challenges.map(c => new ChallengeData(c)),

@@ -14,7 +14,7 @@ import { z } from "zod";
 export const Z$MoveUseMode = z.literal([1, 2, 3, 4, 5]);
 
 /**
- * Zod schema for `{@linkcode TurnMove} as of version 1.10.
+ * Zod schema for {@linkcode TurnMove} as of version 1.10.
  */
 export const Z$TurnMove = z.object({
   move: Z$PositiveInt,

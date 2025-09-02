@@ -6,6 +6,7 @@ import { StatusSchema } from "#schemas/status-effect";
 import { Z$PokemonMove } from "#system/schemas/moves/pokemon-move";
 import { Z$PokemonBattleData } from "#system/schemas/pokemon/pokemon-battle-data";
 import { Z$Gender } from "#system/schemas/pokemon/pokemon-gender";
+import { Z$PokemonSummonData } from "#system/schemas/pokemon/pokemon-summon-data";
 import z from "zod";
 import { Z$PokemonType } from "./pokemon-type";
 

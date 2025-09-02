@@ -1,7 +1,7 @@
 import type { BattlerTag } from "#data/battler-tags";
 import { loadBattlerTag, SerializableBattlerTag } from "#data/battler-tags";
 import type { Gender } from "#data/gender";
-import { PokemonMove } from "#data/moves/pokemon-move";
+import { PokemonMove, type SerializedPokemonMove } from "#data/moves/pokemon-move";
 import type { PokemonSpeciesForm } from "#data/pokemon-species";
 import type { TypeDamageMultiplier } from "#data/type";
 import type { AbilityId } from "#enums/ability-id";
@@ -84,12 +84,12 @@ function deserializePokemonSpeciesForm(value: SerializedSpeciesForm | PokemonSpe
   return getPokemonSpeciesForm(id, formIdx);
 }
 
-interface SerializedIllusionData extends Omit<IllusionData, "fusionSpecies"> {
+export interface SerializedIllusionData extends Omit<IllusionData, "fusionSpecies"> {
   /** The id of the illusioned fusion species, or `undefined` if not a fusion */
   fusionSpecies?: SpeciesId;
 }
 
-interface SerializedPokemonSummonData {
+export interface SerializedPokemonSummonData {
   statStages?: number[];
   moveQueue?: TurnMove[];
   tags?: BattlerTag[];
@@ -101,7 +101,7 @@ interface SerializedPokemonSummonData {
   gender?: Gender;
   fusionGender?: Gender;
   stats: number[];
-  moveset?: PokemonMove[];
+  moveset?: SerializedPokemonMove[];
   types?: PokemonType[];
   addedType?: PokemonType;
   illusion?: SerializedIllusionData;

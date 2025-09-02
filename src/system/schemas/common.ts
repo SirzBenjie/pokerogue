@@ -18,3 +18,6 @@ export const Z$PositiveNumber = z.number().positive().catch(0);
 
 /** Reusable schema for an optional non-negative integer that coerces invalid inputs to `undefined` */
 export const Z$OptionalNonNegativeIntCatchToUndef = z.int().nonnegative().optional().catch(undefined);
+
+/** Reusable schema for an optional string that catches to undefined */
+export const Z$OptionalStringCatchToUndef = z.string().optional().catch(undefined);

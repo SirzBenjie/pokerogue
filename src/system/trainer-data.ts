@@ -10,6 +10,11 @@ export class TrainerData {
   public partnerNameKey: string | undefined;
 
   constructor(source: Trainer | any) {
+    if (source instanceof Trainer) {
+      this.variant = source.variant;
+    } else {
+      this.variant = source.variant ?? (source.female ? TrainerVariant.FEMALE : TrainerVariant.DEFAULT);
+    }
     const sourceTrainer = source instanceof Trainer ? (source as Trainer) : null;
     this.trainerType = sourceTrainer ? sourceTrainer.config.trainerType : source.trainerType;
     this.variant = source.hasOwnProperty("variant")

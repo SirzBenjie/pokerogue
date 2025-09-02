@@ -15,6 +15,8 @@ import { PokemonMove } from "#moves/pokemon-move";
 import type { Variant } from "#sprites/variant";
 import { getPokemonSpecies, getPokemonSpeciesForm } from "#utils/pokemon-utils";
 
+export type SerializedPokemonData = Omit<PokemonData, "toPokemon">;
+
 export class PokemonData {
   public id: number;
   public player: boolean;

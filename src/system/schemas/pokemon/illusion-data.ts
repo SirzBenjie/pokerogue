@@ -1,11 +1,12 @@
+import type { SerializedIllusionData } from "#data/pokemon-data";
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import { Z$PokeballType } from "#system/schemas/pokeball-type";
 import { Z$Gender } from "#system/schemas/pokemon/pokemon-gender";
 import { z } from "zod";
 
-// TODO: Write migrator for illusion data's fusionSpecies field
-// that transforms incoming fusion species
-
+/**
+ * Zod schema for {@linkcode IllusionData} as of version 1.10
+ */
 export const Z$IllusionData = z.object({
   name: z.string(),
   nickname: z.string().optional().catch(undefined),
@@ -21,4 +22,4 @@ export const Z$IllusionData = z.object({
   fusionVariant: z.literal([0, 1, 2]).optional().catch(0),
   fusionGender: Z$Gender.optional().catch(undefined),
   level: Z$PositiveInt.optional().catch(undefined),
-});
+}) satisfies z.ZodType<SerializedIllusionData>;
