@@ -10,7 +10,7 @@ import { Z$BattleType } from "#system/schemas/battle-type";
 import { Z$ChallengeData } from "#system/schemas/challenge-data";
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import { Z$TrainerData } from "#system/schemas/game/trainer-data";
-import { Z$GameMode } from "#system/schemas/game-mode";
+import { Z$GameModes } from "#system/schemas/game-mode";
 import { Z$PokeballType } from "#system/schemas/pokeball-type";
 import { Z$PokemonData } from "#system/schemas/pokemon/pokemon-data";
 // biome-ignore lint/correctness/noUnusedImports: used in TSDoc
@@ -23,7 +23,7 @@ import { z } from "zod";
 export const Z$SessionSaveData = z.looseObject({
   seed: z.string(),
   playTime: z.number(),
-  gameMode: Z$GameMode,
+  gameMode: Z$GameModes,
   party: Z$PokemonData.array(),
   enemyParty: Z$PokemonData.array(),
   // modifiers: TODO

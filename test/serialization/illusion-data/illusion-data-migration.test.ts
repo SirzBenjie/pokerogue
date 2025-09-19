@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { V1_10_IllusionDataMigrator } from "#system/schema-migrators/summon-data";
 import { Z$IllusionData } from "#system/schemas/pokemon/illusion-data";
 import { describe, expect, it } from "vitest";

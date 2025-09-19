@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { getBattlerTag, SerializableBattlerTag } from "#data/battler-tags";
 import { BattlerTagType } from "#enums/battler-tag-type";
 import { MoveId } from "#enums/move-id";

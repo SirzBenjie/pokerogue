@@ -5,12 +5,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// biome-ignore lint/correctness/noUnusedImports: Used in tsdoc comment
-import type { GameMode } from "#app/game-mode";
+import type { GameModes } from "#enums/game-modes";
 import { z } from "zod";
 
 /**
- * Zod schema for {@linkcode GameMode} as of version 1.10.
+ * Zod schema for {@linkcode GameModes} as of version 1.10.
  *
  * @remarks
  * - `0`: Classic
@@ -19,4 +18,4 @@ import { z } from "zod";
  * - `3`: Daily
  * - `4`: Challenge
  */
-export const Z$GameMode = z.literal([0, 1, 2, 3, 4]);
+export const Z$GameModes = z.literal([0, 1, 2, 3, 4]) satisfies z.ZodType<GameModes>;

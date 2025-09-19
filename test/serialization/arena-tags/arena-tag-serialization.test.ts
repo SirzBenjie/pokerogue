@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { getArenaTag, SerializableArenaTag } from "#data/arena-tag";
 import { ArenaTagSide } from "#enums/arena-tag-side";
 import { ArenaTagType } from "#enums/arena-tag-type";
