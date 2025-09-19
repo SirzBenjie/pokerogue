@@ -51,7 +51,7 @@ export interface SessionSaveData {
   score: number;
   waveIndex: number;
   battleType: BattleType;
-  trainer: TrainerData;
+  trainer?: TrainerData;
   gameVersion: string;
   /** The player-chosen name of the run */
   name: string;

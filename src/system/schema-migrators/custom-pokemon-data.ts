@@ -8,7 +8,7 @@ import type z from "zod";
  * This migrator moves the properties into the `customPokemonData` field.
  */
 export function PreCustomPokemonDataMigrator(
-  data: z.output<typeof Z$PokemonData>,
+  data: z.output<typeof Z$PokemonData> & { natureOverride?: number },
 ): asserts data is z.output<typeof Z$PokemonData> {
   // Value of `-1` indicated no override, so we can ignore it.
   const nature = NatureSchema.safeParse(data.natureOverride);
@@ -16,9 +16,9 @@ export function PreCustomPokemonDataMigrator(
     const customPokemonData = data.customPokemonData;
     // If natureOverride is valid, use it
     if (
-      customPokemonData &&
-      typeof customPokemonData === "object" &&
-      ((customPokemonData as { nature?: number }).nature ?? -1) === -1
+      customPokemonData
+      && typeof customPokemonData === "object"
+      && ((customPokemonData as { nature?: number }).nature ?? -1) === -1
     ) {
       customPokemonData;
     } else {

@@ -1,11 +1,13 @@
-import type { SessionSaveData } from "#system/game-data";
 import { Z$ArenaData } from "#system/schemas/arena/arena-data";
 import { Z$BattleType } from "#system/schemas/battle-type";
-import { Z$PositiveInt } from "#system/schemas/common";
-import { Z$GameMode } from "#system/schemas/game-mode";
+import { Z$ChallengeData } from "#system/schemas/challenge-data";
+import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import { Z$TrainerData } from "#system/schemas/game/trainer-data";
+import { Z$GameMode } from "#system/schemas/game-mode";
 import { Z$PokeballType } from "#system/schemas/pokeball-type";
 import { Z$PokemonData } from "#system/schemas/pokemon/pokemon-data";
+// biome-ignore lint/correctness/noUnusedImports: used in TSDoc
+import type { SessionSaveData } from "#types/save-data";
 import { z } from "zod";
 
 /**
@@ -27,7 +29,8 @@ export const Z$SessionSaveData = z.looseObject({
   battleType: Z$BattleType,
   trainer: Z$TrainerData.optional().catch(undefined),
   gameVersion: z.string(),
-
   name: z.string().optional().catch(""),
-  // TODO: Add schema for these
-}) satisfies z.ZodType<Omit<SessionSaveData, "modifiers" | "enemyModifiers">>;
+  timestamp: Z$NonNegativeInt,
+  challenges: Z$ChallengeData.array(),
+  playerFaints: Z$NonNegativeInt.catch(0),
+}) /* satisfies z.ZodType<Omit<SessionSaveData, "modifiers" | "enemyModifiers">> */;

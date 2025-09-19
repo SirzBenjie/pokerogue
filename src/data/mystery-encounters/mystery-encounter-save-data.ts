@@ -31,7 +31,7 @@ export class MysteryEncounterSaveData {
       Object.assign(this, data);
     }
 
-    this.encounteredEvents = this.encounteredEvents ?? [];
-    this.queuedEncounters = this.queuedEncounters ?? [];
+    this.encounteredEvents ??= [];
+    this.queuedEncounters ??= [];
   }
 }
