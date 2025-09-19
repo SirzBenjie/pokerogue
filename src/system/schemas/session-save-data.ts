@@ -34,3 +34,5 @@ export const Z$SessionSaveData = z.looseObject({
   challenges: Z$ChallengeData.array(),
   playerFaints: Z$NonNegativeInt.catch(0),
 }) /* satisfies z.ZodType<Omit<SessionSaveData, "modifiers" | "enemyModifiers">> */;
+
+export type ParsedSessionSaveData = z.output<typeof Z$SessionSaveData>;

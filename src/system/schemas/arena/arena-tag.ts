@@ -1,12 +1,10 @@
-// biome-ignore-start lint/correctness/noUnusedImports: used in tsdoc comment
-import { type EntryHazardTag, loadArenaTag, type SerializableArenaTag } from "#data/arena-tag";
+import type { EntryHazardTag, SerializableArenaTag, SuppressAbilitiesTag } from "#data/arena-tag";
 import type { ArenaTagSide } from "#enums/arena-tag-side";
 import { ArenaTagType } from "#enums/arena-tag-type";
-// biome-ignore-end lint/correctness/noUnusedImports: end
-
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import type { EntryHazardTagType, SerializableArenaTagType } from "#types/arena-tags";
 import type { DiscriminatedUnionFake } from "#types/schema-helpers";
+import type { NonFunctionProperties } from "#types/type-helpers";
 import { z } from "zod";
 
 /**
@@ -17,7 +15,7 @@ import { z } from "zod";
  * - `1`: PLAYER
  * - `2`: ENEMY
  */
-export const Z$ArenaTagSide = z.literal([0, 1, 2]);
+export const Z$ArenaTagSide = z.literal([0, 1, 2]) satisfies z.ZodLiteral<ArenaTagSide>;
 
 /**
  * The base shape of an arena tag, consisting of all of the fields other than
@@ -29,7 +27,7 @@ const Z$BaseArenaTag = z.object({
   sourceId: z.int().or(z.undefined()).catch(undefined),
   side: Z$ArenaTagSide,
   maxDuration: z.int(),
-});
+}) satisfies z.ZodType<Omit<NonFunctionProperties<SerializableArenaTag>, "tagType">>;
 
 // #region typescript-hackery to extract out the proper zod schema type
 
@@ -47,7 +45,7 @@ type BasicArenaTag =
  * If a new ArenaTagType that has no additional properties is added,
  * this MUST be updated to include it.
  */
-const Z$BaseArenaTagEnum = z.literal([
+export const Z$BaseArenaTagEnum = /** __@PURE__ */ z.literal([
   ArenaTagType.NONE,
   ArenaTagType.MUD_SPORT,
   ArenaTagType.WATER_SPORT,
@@ -67,11 +65,14 @@ const Z$BaseArenaTagEnum = z.literal([
   ArenaTagType.FAIRY_LOCK,
 ]) satisfies z.ZodLiteral<BasicArenaTag | ArenaTagType.NONE>;
 
+/** Tag types in the {@linkcode Z$PlainArenaTag} schema */
+export type Z$PlainArenaTagType = z.infer<typeof Z$BaseArenaTagEnum>;
+
 /**
  * Zod schema for the subset of {@linkcode ArenaTagType}s
  * that add no additional serializable fields.
  */
-const Z$PlainArenaTag = z.object({
+const Z$PlainArenaTag = /** @__PURE__ */ z.object({
   ...Z$BaseArenaTag.shape,
   tagType: Z$BaseArenaTagEnum,
 }) as DiscriminatedUnionFake<BasicArenaTag, typeof Z$BaseArenaTag.shape, "tagType">;
@@ -82,18 +83,31 @@ const Z$BaseTrapTag = /** __@PURE__ */ z.object({
 });
 
 /**
+ * Zod schema for {@linkcode EntryHazardTagType}
+ */
+const Z$EntryHazardTagType = /** @__PURE__ */ z.literal([
+  ArenaTagType.STICKY_WEB,
+  ArenaTagType.SPIKES,
+  ArenaTagType.TOXIC_SPIKES,
+  ArenaTagType.STEALTH_ROCK,
+  ArenaTagType.IMPRISON,
+]) satisfies z.ZodLiteral<EntryHazardTagType>;
+
+/** Tag types in the {@linkcode Z$EntryHazardTag} schema */
+export type Z$EntryHazardTagType = z.infer<typeof Z$EntryHazardTagType>;
+
+/**
  * Zod schema for {@linkcode ArenaTrapTag} as of version 1.10
  */
-const Z$ArenaTrapTag = /** __@PURE__ */ z.object({
+const Z$EntryHazardTag = /** __@PURE__ */ z.object({
   ...Z$BaseTrapTag.shape,
-  tagType: z.literal([
-    ArenaTagType.STICKY_WEB,
-    ArenaTagType.SPIKES,
-    ArenaTagType.TOXIC_SPIKES,
-    ArenaTagType.STEALTH_ROCK,
-    ArenaTagType.IMPRISON,
-  ] satisfies EntryHazardTagType[]),
-}) as DiscriminatedUnionFake<EntryHazardTagType, typeof Z$BaseTrapTag.shape, "tagType">;
+  tagType: Z$EntryHazardTagType,
+}) as DiscriminatedUnionFake<
+  // formatting
+  EntryHazardTagType,
+  typeof Z$BaseTrapTag.shape,
+  "tagType"
+> satisfies z.ZodType<Omit<NonFunctionProperties<EntryHazardTag>, "maxLayers" | "groundedOnly">>;
 
 /**
  * Zod schema for {@linkcode ArenaTagType.NEUTRALIZING_GAS} as of version 1.10
@@ -102,10 +116,21 @@ const Z$SuppressAbilitiesTag = /** __@PURE__ */ z.object({
   ...Z$BaseArenaTag.shape,
   tagType: z.literal(ArenaTagType.NEUTRALIZING_GAS),
   sourceCount: Z$PositiveInt,
-});
+}) satisfies z.ZodType<Omit<NonFunctionProperties<SuppressAbilitiesTag>, "beingRemoved">>;
+
+/** Tag type(s) in the {@linkcode Z$SuppressAbilitiesTag} schema */
+export type Z$SuppressAbilitiesTagType = z.infer<typeof Z$SuppressAbilitiesTag>["tagType"];
 
 /**
  * Zod schema for {@linkcode SerializableArenaTag}s as of version 1.10,
  * also permitting "NoneTag".
  */
-export const Z$ArenaTag = z.discriminatedUnion("tagType", [Z$ArenaTrapTag, Z$SuppressAbilitiesTag, Z$PlainArenaTag]);
+export const Z$ArenaTag = /** @__PURE__ */ z.discriminatedUnion("tagType", [
+  Z$EntryHazardTag,
+  Z$SuppressAbilitiesTag,
+  Z$PlainArenaTag,
+]) satisfies z.ZodType<
+  NonFunctionProperties<
+    Omit<SerializableArenaTag, "tagType"> & { tagType: SerializableArenaTagType | ArenaTagType.NONE }
+  >
+>;

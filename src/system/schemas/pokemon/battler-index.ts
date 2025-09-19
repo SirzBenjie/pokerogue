@@ -1,5 +1,4 @@
-// biome-ignore lint/correctness/noUnusedImports: used in tsdoc comment
-import { BattlerIndex } from "#enums/battler-index";
+import type { BattlerIndex } from "#enums/battler-index";
 import { z } from "zod";
 
 /**
@@ -12,4 +11,4 @@ import { z } from "zod";
  * - `2`: Enemy
  * - `3`: Enemy 2
  */
-export const Z$BattlerIndex = z.literal([-1, 0, 1, 2, 3]);
+export const Z$BattlerIndex = z.literal([-1, 0, 1, 2, 3]) satisfies z.ZodType<BattlerIndex>;

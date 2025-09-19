@@ -70,3 +70,16 @@ export function V1_10_IllusionDataMigrator(arg: V1_9_IllusionData): Partial<z.in
     return result;
   }).parse(arg);
 }
+
+/**
+ * A transformer that accepts version 1.9 save data and migrates it to version 1.10
+ */
+export const Z$V1_9Migrator = z.looseObject({
+  // An array of pokemon data
+  party: z.array(
+    // Only need to transform summonData
+    z.looseObject({
+      summonData: Z$V1_9_IllusionData.transform(V1_10_IllusionDataMigrator),
+    }),
+  ),
+});

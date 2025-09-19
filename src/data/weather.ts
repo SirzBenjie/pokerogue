@@ -14,6 +14,7 @@ import i18next from "i18next";
 export interface SerializedWeather {
   weatherType: WeatherType;
   turnsLeft: number;
+  maxDuration?: number;
 }
 
 export class Weather {

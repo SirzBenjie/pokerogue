@@ -17,6 +17,7 @@ export enum TerrainType {
 export interface SerializedTerrain {
   terrainType: TerrainType;
   turnsLeft: number;
+  maxDuration?: number;
 }
 
 export class Terrain {

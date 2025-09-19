@@ -1,17 +1,16 @@
 import type { ArenaTag } from "#data/arena-tag";
 import { loadArenaTag, SerializableArenaTag } from "#data/arena-tag";
 import type { SerializedPositionalTag } from "#data/positional-tags/load-positional-tag";
-import { Terrain } from "#data/terrain";
-import { Weather } from "#data/weather";
+import { type SerializedTerrain, Terrain } from "#data/terrain";
+import { type SerializedWeather, Weather } from "#data/weather";
 import type { BiomeId } from "#enums/biome-id";
 import { Arena } from "#field/arena";
 import type { ArenaTagData } from "#types/arena-tags";
-import type { NonFunctionProperties } from "#types/type-helpers";
 
 export interface SerializedArenaData {
   biome: BiomeId;
-  weather: NonFunctionProperties<Weather> | null;
-  terrain: NonFunctionProperties<Terrain> | null;
+  weather: SerializedWeather | null;
+  terrain: SerializedTerrain | null;
   tags?: ArenaTagData[];
   positionalTags: SerializedPositionalTag[];
   playerTerasUsed?: number;

@@ -1,6 +1,4 @@
-// biome-ignore-start lint/correctness/noUnusedImports: used in a tsdoc comment
-import type { Weather } from "#data/weather";
-import type { WeatherType } from "#enums/weather-type";
+import type { SerializedWeather } from "#data/weather";
 // biome-ignore-end lint/correctness/noUnusedImports: used in a tsdoc comment
 import { z } from "zod";
 
@@ -25,6 +23,6 @@ export const Z$WeatherType = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
  * Zod schema for {@linkcode SerializedWeather} as of version 1.10.
  */
 export const Z$Weather = z.object({
-  type: Z$WeatherType,
+  weatherType: Z$WeatherType,
   turnsLeft: z.int(),
-});
+}) satisfies z.ZodType<SerializedWeather>;

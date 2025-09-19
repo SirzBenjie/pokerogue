@@ -144,6 +144,19 @@ export type BattlerTagDataMap = {
 export type BattlerTagData = ObjectValues<BattlerTagDataMap>;
 
 /**
+ * Subset of {@linkcode BattlerTagType}s whose associated `BattlerTag`
+ * adds no additional fields that are serialized.
+ */
+export type BasicBattlerTagType = keyof {
+  [K in SerializableBattlerTagType as MatchShape<
+    Parameters<BattlerTagTypeMap[K]["loadTag"]>[0],
+    Parameters<BattlerTag["loadTag"]>[0]
+  > extends never
+    ? never
+    : K]: any;
+};
+
+/**
  * Subset of {@linkcode BattlerTagType}s whose associated `BattlerTag` adds a serializable `moveId` field
  * (and no other serialized fields).
  *

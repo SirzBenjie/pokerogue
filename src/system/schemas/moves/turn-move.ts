@@ -22,4 +22,4 @@ export const Z$TurnMove = z.object({
   useMode: Z$MoveUseMode,
   result: Z$MoveResult.optional().catch(undefined),
   turn: Z$NonNegativeInt.optional().catch(undefined),
-});
+}) satisfies z.ZodType<TurnMove>;

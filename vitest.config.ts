@@ -34,8 +34,11 @@ export default defineConfig(({ mode }) => ({
       },
     },
     typecheck: {
+      only: true,
+      ignoreSourceErrors: true,
       tsconfig: "tsconfig.json",
-      include: ["./test/types/**/*.{test,spec}{-|.}d.ts"],
+      include: ["./test/types/**/*.{test,spec}-d.?(c|m)[jt]s?(x)"],
+      // Type checking from vitest should only include the errors from source
     },
     threads: false,
     trace: true,

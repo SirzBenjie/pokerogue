@@ -30,7 +30,7 @@ import type { z } from "zod";
  * and is substantially harder to maintain.
  *
  * Instead, this type helper can be used as a type assertion on the actual zod schema.
- * Note that it *does* require defining a base schema separately, which does not isnclude
+ * Note that it *does* require defining a base schema separately, which does not include
  * the discriminator field.
  *
  * This is a hacky way to get around typescript's limitations.
