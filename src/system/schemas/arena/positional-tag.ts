@@ -36,12 +36,17 @@ const Z$DelayedAttackTag = z.object({
   sourceMove: Z$NonNegativeInt,
 }) satisfies z.ZodType<NonFunctionProperties<DelayedAttackTag>>;
 
+/** Positional Tag type for the {@linkcode DelayedAttackTag} schema */
+export type Z$DelayedAttackTagType = z.infer<typeof Z$DelayedAttackTag>["tagType"];
+
 const Z$WishTag = z.object({
   ...Z$BaseArenaTag.shape,
   tagType: z.literal(PositionalTagType.WISH),
   pokemonName: z.string(),
   healHp: Z$PositiveInt,
 }) satisfies z.ZodType<NonFunctionProperties<WishTag>>;
+/** Positional Tag type for the {@linkcode WishTag} schema */
+export type Z$WishTagType = z.infer<typeof Z$WishTag>["tagType"];
 
 /**
  * Zod schema for an arbitrary {@linkcode PositionalTag} as of version 1.10

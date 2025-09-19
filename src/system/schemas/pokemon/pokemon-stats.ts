@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// biome-ignore lint/correctness/noUnusedImports: Used in a tsdoc comment
 import type { Stat } from "#enums/stat";
 import { Z$PositiveInt } from "#schemas/common";
 import { z } from "zod";
@@ -23,7 +22,7 @@ import { z } from "zod";
  * - `6`: Accuracy
  * - `7`: Evasion
  */
-export const Z$Stat = /** @__PURE__ */ z.literal([0, 1, 2, 3, 4, 5, 6, 7]);
+export const Z$Stat = /** @__PURE__ */ z.literal([0, 1, 2, 3, 4, 5, 6, 7]) satisfies z.ZodType<Stat>;
 
 /**
  * Schema for a Pokémon's Individual Values (IVs), as of version 1.10

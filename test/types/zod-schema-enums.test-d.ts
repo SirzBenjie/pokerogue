@@ -14,15 +14,28 @@ import type {
   StockpilingTag,
   SubstituteTag,
 } from "#data/battler-tags";
+import type { Gender } from "#data/gender";
+import type { DelayedAttackTag, WishTag } from "#data/positional-tags/positional-tag";
 import type { TerrainType } from "#data/terrain";
 import type { ArenaTagSide } from "#enums/arena-tag-side";
 import type { ArenaTagType } from "#enums/arena-tag-type";
+import type { BattleType } from "#enums/battle-type";
+import type { BattlerIndex } from "#enums/battler-index";
+import type { BerryType } from "#enums/berry-type";
 import type { BiomeId } from "#enums/biome-id";
+import type { Challenges } from "#enums/challenges";
+import type { MoveResult } from "#enums/move-result";
 import type { MoveUseMode } from "#enums/move-use-mode";
+import type { MysteryEncounterTier } from "#enums/mystery-encounter-tier";
+import type { MysteryEncounterType } from "#enums/mystery-encounter-type";
+import type { Nature } from "#enums/nature";
 import type { PokeballType } from "#enums/pokeball";
+import type { PokemonType } from "#enums/pokemon-type";
 import type { PositionalTagType } from "#enums/positional-tag-type";
+import type { Stat } from "#enums/stat";
 import type { StatusEffect } from "#enums/status-effect";
 import type { TrainerType } from "#enums/trainer-type";
+import type { TrainerVariant } from "#enums/trainer-variant";
 import type { WeatherType } from "#enums/weather-type";
 import type {
   Z$ArenaTagSide,
@@ -30,13 +43,21 @@ import type {
   Z$PlainArenaTagType,
   Z$SuppressAbilitiesTagType,
 } from "#system/schemas/arena/arena-tag";
-import type { Z$PositionalTagType } from "#system/schemas/arena/positional-tag";
+import type { Z$DelayedAttackTagType, Z$PositionalTagType, Z$WishTagType } from "#system/schemas/arena/positional-tag";
 import type { Z$TerrainType } from "#system/schemas/arena/terrain";
 import type { Z$WeatherType } from "#system/schemas/arena/weather";
+import type { Z$BattleType } from "#system/schemas/battle-type";
+import type { Z$BerryType } from "#system/schemas/berry-type";
 import type { Z$BiomeID } from "#system/schemas/biome-id";
+import type { Z$Challenges } from "#system/schemas/challenge-data";
 import type { Z$TrainerType } from "#system/schemas/game/trainer-type";
+import type { Z$TrainerVariant } from "#system/schemas/game/trainer-variant";
+import type { Z$MoveResult } from "#system/schemas/moves/move-result";
 import type { Z$MoveUseMode } from "#system/schemas/moves/turn-move";
+import type { Z$MysteryEncounterTier } from "#system/schemas/mystery-encounters/mystery-encounter-tier";
+import type { Z$MysteryEncounterType } from "#system/schemas/mystery-encounters/mystery-encounter-type";
 import type { Z$PokeballType } from "#system/schemas/pokeball-type";
+import type { Z$BattlerIndex } from "#system/schemas/pokemon/battler-index";
 import type {
   Z$AutotomizedTagType,
   Z$CommandedTagType,
@@ -48,6 +69,10 @@ import type {
   Z$SubstituteTagType,
   Z$TagWithMoveIdTagType,
 } from "#system/schemas/pokemon/battler-tag";
+import type { Z$Gender } from "#system/schemas/pokemon/pokemon-gender";
+import type { Z$Nature } from "#system/schemas/pokemon/pokemon-nature";
+import type { Z$Stat } from "#system/schemas/pokemon/pokemon-stats";
+import type { Z$PokemonType } from "#system/schemas/pokemon/pokemon-type";
 import type { Z$StatusEffect } from "#system/schemas/status-effect";
 import type { BasicBattlerTagType, BattlerTagTypeWithMoveId, SerializableBattlerTagType } from "#types/battler-tags";
 import { describe, expectTypeOf, test } from "vitest";
@@ -62,10 +87,6 @@ import type { z } from "zod";
  */
 
 describe("Zod Schemas - No missing Enum values", () => {
-  test("PositionalTags", () => {
-    expectTypeOf<z.infer<typeof Z$PositionalTagType>>().toEqualTypeOf<PositionalTagType>();
-  });
-
   test("ArenaTagSide", () => {
     expectTypeOf<z.infer<typeof Z$ArenaTagSide>>().branded.toEqualTypeOf<ArenaTagSide>();
   });
@@ -86,7 +107,7 @@ describe("Zod Schemas - No missing Enum values", () => {
     expectTypeOf<z.infer<typeof Z$WeatherType>>().branded.toEqualTypeOf<WeatherType>();
   });
 
-  describe("ArenaTag", () => {
+  describe("ArenaTags", () => {
     test("EntryHazardTag", () => {
       expectTypeOf<Z$EntryHazardTagType>().toEqualTypeOf<EntryHazardTag["tagType"]>();
     });
@@ -104,7 +125,7 @@ describe("Zod Schemas - No missing Enum values", () => {
     });
   });
 
-  describe("BattlerTag", () => {
+  describe("BattlerTags", () => {
     test("BattlerTagTypeWithMoveId", () => {
       expectTypeOf<Z$TagWithMoveIdTagType>().toEqualTypeOf<BattlerTagTypeWithMoveId>();
     });
@@ -160,6 +181,20 @@ describe("Zod Schemas - No missing Enum values", () => {
     });
   });
 
+  describe("PositionalTags", () => {
+    test("WishTag", () => {
+      expectTypeOf<Z$WishTagType>().toEqualTypeOf<WishTag["tagType"]>();
+    });
+
+    test("DelayedAttackTag", () => {
+      expectTypeOf<Z$DelayedAttackTagType>().toEqualTypeOf<DelayedAttackTag["tagType"]>();
+    });
+
+    test("PositionalTag", () => {
+      expectTypeOf<z.infer<typeof Z$PositionalTagType>>().toEqualTypeOf<PositionalTagType>();
+    });
+  });
+
   test("BiomeId", () => {
     expectTypeOf<z.infer<typeof Z$BiomeID>>().branded.toEqualTypeOf<BiomeId>();
   });
@@ -172,7 +207,56 @@ describe("Zod Schemas - No missing Enum values", () => {
     expectTypeOf<z.infer<typeof Z$MoveUseMode>>().branded.toEqualTypeOf<MoveUseMode>();
   });
 
+  test("MoveResult", () => {
+    expectTypeOf<z.infer<typeof Z$MoveResult>>().branded.toEqualTypeOf<MoveResult>();
+  });
+
   test("TrainerType", () => {
     expectTypeOf<z.infer<typeof Z$TrainerType>>().branded.toEqualTypeOf<TrainerType>();
+  });
+
+  test("TrainerVariant", () => {
+    // TrainerVariant has no NONE value, so we can just match directly
+    expectTypeOf<z.infer<typeof Z$TrainerVariant>>().branded.toEqualTypeOf<TrainerVariant>();
+  });
+
+  test("BattleType", () => {
+    expectTypeOf<z.infer<typeof Z$BattleType>>().branded.toEqualTypeOf<BattleType>();
+  });
+
+  test("BerryType", () => {
+    expectTypeOf<z.infer<typeof Z$BerryType>>().branded.toEqualTypeOf<BerryType>();
+  });
+
+  test("Challenges", () => {
+    expectTypeOf<z.infer<typeof Z$Challenges>>().branded.toEqualTypeOf<Challenges>();
+  });
+
+  test("BattlerIndex", () => {
+    expectTypeOf<z.infer<typeof Z$BattlerIndex>>().branded.toEqualTypeOf<BattlerIndex>();
+  });
+
+  test("Gender", () => {
+    expectTypeOf<z.infer<typeof Z$Gender>>().branded.toEqualTypeOf<Gender>();
+  });
+
+  test("Nature", () => {
+    expectTypeOf<z.infer<typeof Z$Nature>>().branded.toEqualTypeOf<Nature>();
+  });
+
+  test("Stat", () => {
+    expectTypeOf<z.infer<typeof Z$Stat>>().branded.toEqualTypeOf<Stat>();
+  });
+
+  test("PokemonType", () => {
+    expectTypeOf<z.infer<typeof Z$PokemonType>>().branded.toEqualTypeOf<PokemonType>();
+  });
+
+  test("MysteryEncounterTier", () => {
+    expectTypeOf<z.infer<typeof Z$MysteryEncounterTier>>().branded.toEqualTypeOf<MysteryEncounterTier>();
+  });
+
+  test("MysteryEncounterType", () => {
+    expectTypeOf<z.infer<typeof Z$MysteryEncounterType>>().branded.toEqualTypeOf<MysteryEncounterType>();
   });
 });

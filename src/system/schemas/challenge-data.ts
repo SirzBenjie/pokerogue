@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// biome-ignore lint/correctness/noUnusedImports: used in TSDoc
 import type { Challenges } from "#enums/challenges";
 import type { ChallengeData } from "#system/challenge-data";
 import { Z$NonNegativeInt } from "#system/schemas/common";
@@ -26,7 +25,7 @@ import { z } from "zod";
  * - `8`: Limited Support
  * - `9`: Hardcore
  */
-export const Z$Challenges = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+export const Z$Challenges = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) satisfies z.ZodType<Challenges>;
 
 /**
  * Zod schema for {@linkcode ChallengeData} as of version 1.10

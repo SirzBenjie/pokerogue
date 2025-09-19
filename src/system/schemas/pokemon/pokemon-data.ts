@@ -7,7 +7,7 @@
 
 import { Z$BoolCatchToFalse, Z$NonNegativeInt, Z$PositiveInt } from "#schemas/common";
 import { Z$PokeballType } from "#schemas/pokeball-type";
-import { NatureSchema } from "#schemas/pokemon/pokemon-nature";
+import { Z$Nature } from "#schemas/pokemon/pokemon-nature";
 import { Z$IVSet, Z$StatSet } from "#schemas/pokemon/pokemon-stats";
 import { StatusSchema } from "#schemas/status-effect";
 import { Z$PokemonMove } from "#system/schemas/moves/pokemon-move";
@@ -48,7 +48,7 @@ export const Z$PokemonData = z.looseObject({
   hp: Z$NonNegativeInt,
   stats: Z$StatSet,
   ivs: Z$IVSet,
-  nature: NatureSchema,
+  nature: Z$Nature,
   moveset: z.array(Z$PokemonMove).catch([]),
   status: z.union([z.null(), StatusSchema]).catch(null),
   friendship: z.int().min(0).max(255).catch(0),

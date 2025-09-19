@@ -5,10 +5,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import type { PokemonType } from "#enums/pokemon-type";
 import { z } from "zod";
 
 /**
- * Schema for a Pokémon's type, as of version 1.10
+ * Zod schema for {@linkcode PokemonType} as of version 1.10
  * - `-1`: Unknown (aka typeless),
  * - `0`: Normal,
  * - `1`: Fighting,
@@ -30,4 +31,6 @@ import { z } from "zod";
  * - `17`: Fairy
  * - `18`: Stellar
  */
-export const Z$PokemonType = z.literal([-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+export const Z$PokemonType = z.literal([
+  -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+]) satisfies z.ZodType<PokemonType>;

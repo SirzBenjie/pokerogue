@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import type { BerryType } from "#enums/berry-type";
 import { z } from "zod";
 
 /**
@@ -23,4 +24,4 @@ import { z } from "zod";
  * - `9`: Starf
  * - `10`: Leppa
  */
-export const Z$BerryType = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+export const Z$BerryType = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) satisfies z.ZodType<BerryType>;
