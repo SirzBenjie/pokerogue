@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import type { SerializedWeather } from "#data/weather";
 // biome-ignore-end lint/correctness/noUnusedImports: used in a tsdoc comment
 import { z } from "zod";

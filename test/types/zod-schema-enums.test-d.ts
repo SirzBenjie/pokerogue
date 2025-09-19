@@ -1,3 +1,9 @@
+/*
+ * SPDX-Copyright-Text: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import type { EntryHazardTag, SerializableArenaTag, SuppressAbilitiesTag } from "#data/arena-tag";
 import type {
   AutotomizedTag,
@@ -11,8 +17,12 @@ import type {
 import type { TerrainType } from "#data/terrain";
 import type { ArenaTagSide } from "#enums/arena-tag-side";
 import type { ArenaTagType } from "#enums/arena-tag-type";
+import type { BiomeId } from "#enums/biome-id";
+import type { MoveUseMode } from "#enums/move-use-mode";
 import type { PokeballType } from "#enums/pokeball";
 import type { PositionalTagType } from "#enums/positional-tag-type";
+import type { StatusEffect } from "#enums/status-effect";
+import type { TrainerType } from "#enums/trainer-type";
 import type { WeatherType } from "#enums/weather-type";
 import type {
   Z$ArenaTagSide,
@@ -23,6 +33,9 @@ import type {
 import type { Z$PositionalTagType } from "#system/schemas/arena/positional-tag";
 import type { Z$TerrainType } from "#system/schemas/arena/terrain";
 import type { Z$WeatherType } from "#system/schemas/arena/weather";
+import type { Z$BiomeID } from "#system/schemas/biome-id";
+import type { Z$TrainerType } from "#system/schemas/game/trainer-type";
+import type { Z$MoveUseMode } from "#system/schemas/moves/turn-move";
 import type { Z$PokeballType } from "#system/schemas/pokeball-type";
 import type {
   Z$AutotomizedTagType,
@@ -35,6 +48,7 @@ import type {
   Z$SubstituteTagType,
   Z$TagWithMoveIdTagType,
 } from "#system/schemas/pokemon/battler-tag";
+import type { Z$StatusEffect } from "#system/schemas/status-effect";
 import type { BasicBattlerTagType, BattlerTagTypeWithMoveId, SerializableBattlerTagType } from "#types/battler-tags";
 import { describe, expectTypeOf, test } from "vitest";
 import type { z } from "zod";
@@ -49,27 +63,27 @@ import type { z } from "zod";
 
 describe("Zod Schemas - No missing Enum values", () => {
   test("PositionalTags", () => {
-    expectTypeOf<z.input<typeof Z$PositionalTagType>>().toEqualTypeOf<PositionalTagType>();
+    expectTypeOf<z.infer<typeof Z$PositionalTagType>>().toEqualTypeOf<PositionalTagType>();
   });
 
   test("ArenaTagSide", () => {
-    expectTypeOf<z.input<typeof Z$ArenaTagSide>>().branded.toEqualTypeOf<ArenaTagSide>();
+    expectTypeOf<z.infer<typeof Z$ArenaTagSide>>().branded.toEqualTypeOf<ArenaTagSide>();
   });
 
   test("PokeballType", () => {
     // Luxury ball is not a valid type for catching
-    expectTypeOf<z.input<typeof Z$PokeballType>>().branded.toEqualTypeOf<
+    expectTypeOf<z.infer<typeof Z$PokeballType>>().branded.toEqualTypeOf<
       Exclude<PokeballType, PokeballType.LUXURY_BALL>
     >();
   });
 
   test("TerrainType", () => {
-    expectTypeOf<z.input<typeof Z$TerrainType>>().branded.toEqualTypeOf<TerrainType>();
+    expectTypeOf<z.infer<typeof Z$TerrainType>>().branded.toEqualTypeOf<TerrainType>();
   });
 
   test("WeatherType", () => {
     // None is not a valid type for weather
-    expectTypeOf<z.input<typeof Z$WeatherType>>().branded.toEqualTypeOf<WeatherType>();
+    expectTypeOf<z.infer<typeof Z$WeatherType>>().branded.toEqualTypeOf<WeatherType>();
   });
 
   describe("ArenaTag", () => {
@@ -144,5 +158,21 @@ describe("Zod Schemas - No missing Enum values", () => {
       // and so it does not have a specific "tagType" field.
       expectTypeOf<typesInSchema>().toEqualTypeOf<SerializableBattlerTagType>();
     });
+  });
+
+  test("BiomeId", () => {
+    expectTypeOf<z.infer<typeof Z$BiomeID>>().branded.toEqualTypeOf<BiomeId>();
+  });
+
+  test("StatusEffect", () => {
+    expectTypeOf<z.infer<typeof Z$StatusEffect>>().branded.toEqualTypeOf<StatusEffect>();
+  });
+
+  test("MoveUseMode", () => {
+    expectTypeOf<z.infer<typeof Z$MoveUseMode>>().branded.toEqualTypeOf<MoveUseMode>();
+  });
+
+  test("TrainerType", () => {
+    expectTypeOf<z.infer<typeof Z$TrainerType>>().branded.toEqualTypeOf<TrainerType>();
   });
 });

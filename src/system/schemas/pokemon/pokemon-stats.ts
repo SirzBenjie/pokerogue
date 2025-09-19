@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 // biome-ignore lint/correctness/noUnusedImports: Used in a tsdoc comment
 import type { Stat } from "#enums/stat";
 import { Z$PositiveInt } from "#schemas/common";

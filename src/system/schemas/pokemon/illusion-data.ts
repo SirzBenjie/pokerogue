@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import type { SerializedIllusionData } from "#data/pokemon-data";
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
 import { Z$PokeballType } from "#system/schemas/pokeball-type";

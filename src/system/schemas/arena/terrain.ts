@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 // biome-ignore-start lint/correctness/noUnusedImports: used in a tsdoc commentD
 import type { SerializedTerrain, TerrainType } from "#data/terrain";
 // biome-ignore-end lint/correctness/noUnusedImports: end

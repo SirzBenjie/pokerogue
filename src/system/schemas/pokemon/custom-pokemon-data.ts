@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Z$OptionalNonNegativeIntCatchToUndef, Z$PositiveInt } from "#schemas/common";
 import { Z$PokemonType } from "#system/schemas/pokemon/pokemon-type";
 import { z } from "zod";

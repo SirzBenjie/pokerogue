@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { TrainerVariant } from "#enums/trainer-variant";
 import { Z$NonNegativeInt } from "#system/schemas/common";
 import { Z$TrainerType } from "#system/schemas/game/trainer-type";

@@ -51,13 +51,13 @@ export class CustomPokemonData {
    */
   static isDefault(data: CustomPokemonData | Partial<CustomPokemonData>): boolean {
     return (
-      data.spriteScale === -1 &&
-      data.ability === -1 &&
-      data.passive === -1 &&
-      data.nature === -1 &&
-      Array.isArray(data.types) &&
-      data.types.length === 0 &&
-      (data.hitsRecCount === null || data.hitsRecCount === 0)
+      data.spriteScale === -1
+      && data.ability === -1
+      && data.passive === -1
+      && data.nature === -1
+      && Array.isArray(data.types)
+      && data.types.length === 0
+      && (data.hitsRecCount === null || data.hitsRecCount === 0)
     );
   }
 }

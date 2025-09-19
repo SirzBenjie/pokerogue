@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 import testData from "./v1.9-v1.10.json";
 
 describe("Deserialize - Illusion Data", () => {
-
   describe("Migration from v1.9 to v1.10", () => {
     it.each(testData)("$testName", ({ $input, $output }) => {
       const migratedData = V1_10_IllusionDataMigrator($input);
@@ -12,5 +11,4 @@ describe("Deserialize - Illusion Data", () => {
       expect(parsedData).toEqual($output);
     });
   });
-  
 });

@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Z$BoolCatchToFalse, Z$NonNegativeInt, Z$PositiveInt } from "#schemas/common";
 import { Z$PokeballType } from "#schemas/pokeball-type";
 import { NatureSchema } from "#schemas/pokemon/pokemon-nature";

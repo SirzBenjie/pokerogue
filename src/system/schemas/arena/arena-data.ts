@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 // biome-ignore-start lint/correctness/noUnusedImports: used in a tsdoc comment
 import type { SerializedArenaData } from "#system/arena-data";
 import { Z$ArenaTag } from "#system/schemas/arena/arena-tag";

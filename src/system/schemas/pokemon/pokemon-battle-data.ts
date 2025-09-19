@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Z$BerryType } from "#schemas/berry-type";
 import { Z$NonNegativeInt } from "#schemas/common";
 import { z } from "zod";

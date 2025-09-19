@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import type { SerializedPokemonSummonData } from "#data/pokemon-data";
 import { Z$NonNegativeInt } from "#system/schemas/common";
 import { Z$PokemonMove } from "#system/schemas/moves/pokemon-move";
@@ -25,8 +32,9 @@ export const Z$SerializedSpeciesForm = z.object({
 export const Z$PokemonSummonData = z.object({
   statSages: z.array(z.int().min(-6).max(6).catch(0)).optional().catch(undefined),
   moveQueue: z.array(Z$TurnMove).optional().catch(undefined),
-  tags: Z$BattlerTag.array()
-    .refine(arr => arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined)),
+  tags: Z$BattlerTag.array().refine(arr =>
+    arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined),
+  ),
   abilitySuppressed: z.boolean().optional().catch(undefined),
   speciesForm: Z$SerializedSpeciesForm.optional().catch(undefined),
   ability: Z$NonNegativeInt.optional().catch(undefined),

@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import type { DelayedAttackTag, PositionalTag, WishTag } from "#data/positional-tags/positional-tag";
 import { PositionalTagType } from "#enums/positional-tag-type";
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";

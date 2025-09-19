@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Z$ArenaData } from "#system/schemas/arena/arena-data";
 import { Z$BattleType } from "#system/schemas/battle-type";
 import { Z$ChallengeData } from "#system/schemas/challenge-data";

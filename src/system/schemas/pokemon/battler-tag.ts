@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 // biome-ignore lint/correctness/noUnusedImports: used in TSDoc
 import type { CritBoostTag } from "#data/battler-tags";
 import { BattlerTagType } from "#enums/battler-tag-type";
