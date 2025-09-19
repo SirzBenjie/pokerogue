@@ -1,11 +1,11 @@
 // biome-ignore-start lint/correctness/noUnusedImports: used in tsdoc comment
-import { type ArenaTrapTag, loadArenaTag, type SerializableArenaTag } from "#data/arena-tag";
+import { type EntryHazardTag, loadArenaTag, type SerializableArenaTag } from "#data/arena-tag";
 import type { ArenaTagSide } from "#enums/arena-tag-side";
 import { ArenaTagType } from "#enums/arena-tag-type";
 // biome-ignore-end lint/correctness/noUnusedImports: end
 
 import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
-import type { ArenaTrapTagType, SerializableArenaTagType } from "#types/arena-tags";
+import type { EntryHazardTagType, SerializableArenaTagType } from "#types/arena-tags";
 import type { DiscriminatedUnionFake } from "#types/schema-helpers";
 import { z } from "zod";
 
@@ -28,6 +28,7 @@ const Z$BaseArenaTag = z.object({
   sourceMove: Z$NonNegativeInt.optional().catch(undefined),
   sourceId: z.int().or(z.undefined()).catch(undefined),
   side: Z$ArenaTagSide,
+  maxDuration: z.int(),
 });
 
 // #region typescript-hackery to extract out the proper zod schema type
@@ -36,7 +37,7 @@ const Z$BaseArenaTag = z.object({
  * Arena tag type that has no extra additional fields.
  */
 type BasicArenaTag =
-  | Exclude<SerializableArenaTagType, ArenaTagType.NEUTRALIZING_GAS | ArenaTrapTagType>
+  | Exclude<SerializableArenaTagType, ArenaTagType.NEUTRALIZING_GAS | EntryHazardTag>
   | ArenaTagType.NONE;
 
 //#endregion: typescript-hackery
@@ -78,7 +79,6 @@ const Z$PlainArenaTag = z.object({
 const Z$BaseTrapTag = /** __@PURE__ */ z.object({
   ...Z$BaseArenaTag.shape,
   layers: z.int().min(1).max(3).catch(1),
-  maxLayers: z.int().min(1).max(3),
 });
 
 /**
@@ -92,8 +92,8 @@ const Z$ArenaTrapTag = /** __@PURE__ */ z.object({
     ArenaTagType.TOXIC_SPIKES,
     ArenaTagType.STEALTH_ROCK,
     ArenaTagType.IMPRISON,
-  ] satisfies ArenaTrapTagType[]),
-}) as DiscriminatedUnionFake<ArenaTrapTagType, typeof Z$BaseTrapTag.shape, "tagType">;
+  ] satisfies EntryHazardTagType[]),
+}) as DiscriminatedUnionFake<EntryHazardTagType, typeof Z$BaseTrapTag.shape, "tagType">;
 
 /**
  * Zod schema for {@linkcode ArenaTagType.NEUTRALIZING_GAS} as of version 1.10

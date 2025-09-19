@@ -1,13 +1,12 @@
 import { Z$PositiveInt } from "#system/schemas/common";
 import type { Z$IllusionData } from "#system/schemas/pokemon/illusion-data";
-import { isNullOrUndefined } from "#utils/common";
 import { getPokemonSpecies } from "#utils/pokemon-utils";
 import { z } from "zod";
 
 /**
  * In version 1.9, serialized illusion data looked like this, where `basePokemon` held
  * information about the pokemon that had the illusion ability, while the pokemon's own
- * properties were modified. (though were overwritten on save).
+ * properties were modified (though were overwritten on save).
  *
  * ```ts
  * interface IllusionData {
@@ -63,7 +62,7 @@ export function V1_10_IllusionDataMigrator(arg: V1_9_IllusionData): Partial<z.in
     } as Partial<z.input<typeof Z$IllusionData>>;
 
     // With no fusion species, these fields should be left undefined.
-    if (!isNullOrUndefined(data.fusionSpecies)) {
+    if (data.fusionSpecies != null) {
       result.fusionSpecies = data.fusionSpecies.speciesId;
       result.fusionShiny = false; // default shiny state
       result.fusionVariant = 0; // default variant

@@ -61,12 +61,11 @@
         "./src/system/*.ts"
       ],
       "#schemas/*": [
-        "./system/schemas/*.ts",
-        "./system/schemas/arena/*.ts",
-        "./system/schemas/moves/*.ts",
-        "./system/schemas/pokemon/*.ts"
+        "./src/system/schemas/*.ts",
+        "./src/system/schemas/arena/*.ts",
+        "./src/system/schemas/moves/*.ts",
+        "./src/system/schemas/pokemon/*.ts"
       ],
-      "#schemas/*": ["./system/schemas/*.ts", "./system/schemas/v1.10/*.ts"],
       "#trainers/*": ["./src/data/trainers/*.ts"],
       "#types/*": ["./src/@types/*.ts"],
       "#ui/*": [
