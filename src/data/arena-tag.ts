@@ -91,7 +91,7 @@ interface BaseArenaTag {
   /**
    * The {@linkcode MoveId} that created this tag, or `undefined` if not set by a move.
    */
-  sourceMove?: MoveId;
+  sourceMove?: MoveId | undefined;
   /**
    * The {@linkcode Pokemon.id | PID} of the {@linkcode Pokemon} having created the tag, or `undefined` if not set by a Pokemon.
    */
@@ -116,7 +116,7 @@ export abstract class ArenaTag implements BaseArenaTag {
   // Intentionally left undocumented to inherit comments from interface
   public turnCount: number;
   public maxDuration: number;
-  public sourceMove?: MoveId;
+  public sourceMove?: MoveId | undefined;
   public sourceId: number | undefined;
   public side: ArenaTagSide;
 
@@ -152,9 +152,16 @@ export abstract class ArenaTag implements BaseArenaTag {
     this.maxDuration = turnCount;
     // Prevent serialization
     if (sourceMove != null) {
-      this.sourceMove = sourceMove;
-    }
-    if (sourceId != null) {
+      // TODO: Rework tags passing `MoveId.NONE` to instead pass `undefined` for consistency
+      // TODO: Enforce that all arena tags explicitly declare any used properties to ensure only required properties are serialized
+      if (sourceMove) {
+        this.sourceMove = sourceMove;
+      }
+      if (sourceId != null) {
+      }
+      if (sourceId !== undefined) {
+        this.sourceId = sourceId;
+      }
       this.sourceId = sourceId;
     }
     this.side = side;
@@ -232,15 +239,17 @@ export abstract class ArenaTag implements BaseArenaTag {
    * @param source - The arena tag being loaded
    */
   loadTag<const T extends this>(source: BaseArenaTag & Pick<T, "tagType">): void {
-    this.turnCount = source.turnCount;
-    this.maxDuration = source.maxDuration;
-    if (source.sourceMove != null) {
-      this.sourceMove = source.sourceMove;
+    const { sourceMove, turnCount, sourceId, maxDuration, side } = source;
+    this.turnCount = turnCount;
+    this.maxDuration = maxDuration;
+    if (sourceMove != null) {
+      this.sourceMove = sourceMove;
     }
-    if (source.sourceId != null) {
-      this.sourceId = source.sourceId;
+    if (sourceId != null) {
+      this.sourceId = sourceId;
     }
-    this.side = source.side;
+
+    this.side = side;
   }
 
   /**
@@ -954,7 +963,7 @@ class StealthRockTag extends DamagingTrapTag {
   }
 
   protected override getDamageHpRatio(pokemon: Pokemon): number {
-    const effectiveness = pokemon.getAttackTypeEffectiveness(PokemonType.ROCK, undefined, true);
+    const effectiveness = pokemon.getAttackTypeEffectiveness(PokemonType.ROCK, { ignoreStrongWinds: true });
     return 0.125 * effectiveness;
   }
 
@@ -1469,7 +1478,7 @@ export class FairyLockTag extends SerializableArenaTag {
  */
 export class SuppressAbilitiesTag extends SerializableArenaTag {
   // Source count is allowed to be inwardly mutable, but outwardly immutable
-  public readonly sourceCount = 1;
+  public readonly sourceCount = 1 as number;
   public readonly tagType = ArenaTagType.NEUTRALIZING_GAS;
   // Private field prevents field from appearing during serialization
   /** Whether the tag is in the process of being removed */
@@ -1694,7 +1703,7 @@ export class PendingHealTag extends SerializableArenaTag {
 
     targetEffects.splice(targetEffects.indexOf(healEffect), 1);
 
-    return healEffect != null;
+    return true;
   }
 
   /**

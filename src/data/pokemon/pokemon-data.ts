@@ -11,6 +11,7 @@ import type { Nature } from "#enums/nature";
 import type { PokemonType } from "#enums/pokemon-type";
 import type { SpeciesId } from "#enums/species-id";
 import { StatusEffect } from "#enums/status-effect";
+import type { Pokemon } from "#field/pokemon";
 import type { AttackMoveResult } from "#types/attack-move-result";
 import type { IllusionData } from "#types/illusion-data";
 import type { SerializedSpeciesForm } from "#types/pokemon-common";
@@ -86,7 +87,7 @@ function deserializePokemonSpeciesForm(value: SerializedSpeciesForm | PokemonSpe
 
 export interface SerializedIllusionData extends Omit<IllusionData, "fusionSpecies"> {
   /** The id of the illusioned fusion species, or `undefined` if not a fusion */
-  fusionSpecies?: SpeciesId;
+  fusionSpecies?: SpeciesId | undefined;
 }
 
 export interface SerializedPokemonSummonData {
@@ -94,20 +95,20 @@ export interface SerializedPokemonSummonData {
   moveQueue?: TurnMove[];
   tags?: BattlerTag[];
   abilitySuppressed?: boolean;
-  speciesForm?: SerializedSpeciesForm;
-  fusionSpeciesForm?: SerializedSpeciesForm;
-  ability?: AbilityId;
-  passiveAbility?: AbilityId;
-  gender?: Gender;
-  fusionGender?: Gender;
+  abilitiesApplied: AbilityId[];
+  speciesForm?: SerializedSpeciesForm | undefined;
+  fusionSpeciesForm?: SerializedSpeciesForm | undefined;
+  ability?: AbilityId | undefined;
+  passiveAbility?: AbilityId | undefined;
+  gender?: Gender | undefined;
+  fusionGender?: Gender | undefined;
   stats: number[];
-  moveset?: SerializedPokemonMove[];
-  types?: PokemonType[];
-  addedType?: PokemonType;
-  illusion?: SerializedIllusionData;
-  illusionBroken?: boolean;
-  berriesEatenLast?: BerryType[];
-  moveHistory?: TurnMove[];
+  moveset?: SerializedPokemonMove[] | undefined;
+  types?: PokemonType[] | undefined;
+  addedType?: PokemonType | undefined;
+  illusion?: SerializedIllusionData |  undefined;
+  berriesEatenLast?: BerryType[] | undefined;
+  moveHistory?: TurnMove[] | undefined;
 }
 
 /**
@@ -116,20 +117,23 @@ export interface SerializedPokemonSummonData {
  *
  * @sealed
  */
+// TODO: Change these `null`s into `undefined`s to save on storage space (or use custom serialization to skip them entirely)
 export class PokemonSummonData {
   /** [Atk, Def, SpAtk, SpDef, Spd, Acc, Eva] */
   public statStages: number[] = [0, 0, 0, 0, 0, 0, 0];
   /**
    * A queue of moves yet to be executed, used by charging, recharging and frenzy moves.
-   * So long as this array is nonempty, this Pokemon's corresponding `CommandPhase` will be skipped over entirely
-   * in favor of using the queued move.
-   * TODO: Clean up a lot of the code surrounding the move queue.
+   * @remarks
+   * So long as this array is non-empty, this Pokemon's corresponding `CommandPhase`
+   * will be skipped over entirely in favor of using the queued move.
    */
+  // TODO: Clean up a lot of the code surrounding the move queue.
   public moveQueue: TurnMove[] = [];
   public tags: BattlerTag[] = [];
   public abilitySuppressed = false;
+  public abilitiesApplied: Set<AbilityId> = new Set();
 
-  // Overrides for transform.
+  // Overrides for transform and company.
   // TODO: Move these into a separate class & add rage fist hit count
   public speciesForm: PokemonSpeciesForm | null = null;
   public fusionSpeciesForm: PokemonSpeciesForm | null = null;
@@ -140,19 +144,17 @@ export class PokemonSummonData {
   public stats: number[] = [0, 0, 0, 0, 0, 0];
   public moveset: PokemonMove[] | null;
 
+  /**
+   * An array containing any temporary {@link https://bulbapedia.bulbagarden.net/wiki/Type_change | typing overrides}
+   * the user has been inflicted with, barring any added types from Forest's Curse or Trick-or-Treat.
+   */
+  // TODO: Review all instances where this is used to ensure that they interact with type-change moves correctly
   public types: PokemonType[] = [];
+  /** The "third" type added from Trick-or-Treat or Forest's Curse, if present. */
   public addedType: PokemonType | null = null;
 
   /** Data pertaining to this pokemon's Illusion, if it has one. */
   public illusion: IllusionData | null = null;
-  /**
-   * Whether this Pokemon's illusion has been broken since switching out.
-   * @defaultValue `false`
-   */
-  // TODO: Since Illusion applies on switch in, and this entire class is reset on switch-in,
-  // this may be replaceable with a check for `pokemon.summonData.illusionData !== null`
-  public illusionBroken = false;
-
   /** Array containing all berries eaten in the last turn; used by {@linkcode AbilityId.CUD_CHEW} */
   public berriesEatenLast: BerryType[] = [];
 
@@ -212,6 +214,14 @@ export class PokemonSummonData {
           .filter((t): t is SerializableBattlerTag => t instanceof SerializableBattlerTag);
         continue;
       }
+
+      if (key === "abilitiesApplied") {
+        for (const a of value) {
+          this.abilitiesApplied.add(a);
+        }
+        continue;
+      }
+
       this[key] = value;
     }
   }
@@ -249,6 +259,7 @@ export class PokemonSummonData {
               ...(this.illusion as Omit<typeof illusion, "fusionSpecies">),
               fusionSpecies: illusionSpeciesForm?.speciesId,
             },
+      abilitiesApplied: [...this.abilitiesApplied.values()],
     };
     // Replace `null` with `undefined`, as `undefined` never gets serialized
     // Replace empty arrays with `[]`
@@ -315,6 +326,7 @@ export class PokemonWaveData {
    */
   public abilitiesApplied: Set<AbilityId> = new Set<AbilityId>();
   /** Whether the pokemon's ability has been revealed or not */
+  // TODO: this doesn't account for passives
   public abilityRevealed = false;
 }
 
@@ -323,7 +335,9 @@ export class PokemonWaveData {
  * Resets at the start of a new turn, as well as on switch.
  */
 export class PokemonTurnData {
-  public acted = false;
+  // #region Move usage-related properties
+  // All of these properties can likely go inside a "move-in-flight" object later
+
   /** How many times the current move should hit the target(s) */
   public hitCount = 0;
   /**
@@ -336,17 +350,33 @@ export class PokemonTurnData {
   public totalDamageDealt = 0;
   public singleHitDamageDealt = 0;
   public damageTaken = 0;
+  /**
+   * An array containing data about attacks received this turn, in FIFO order.
+   */
   public attacksReceived: AttackMoveResult[] = [];
-  public order: number;
   public statStagesIncreased = false;
   public statStagesDecreased = false;
   public moveEffectiveness: TypeDamageMultiplier | null = null;
   public combiningPledge?: MoveId;
+  public failedRunAway = false;
+  public joinedRound = false;
+
+  // #endregion Move usage-related properties
+
+  public acted = false;
+  public order: number;
   /** The Pokemon was brought in this turn by a switch action (not an intial encounter/summon) */
   public switchedInThisTurn = false;
   public summonedThisTurn = false;
-  public failedRunAway = false;
-  public joinedRound = false;
+
+  // TODO: This effectively only exists for castform/cherrim and is really ugly;
+  // revisit after form change rework
+  /**
+   * Tracker for what abilities have been applied due to form changes during this turn. \
+   * Used to prevent infinite loops from form change abilities triggering their own transformation conditions.
+   */
+  public formChangeAbilitiesApplied = new Set<AbilityId>();
+
   /**
    * Tracker for a pending status effect.
    *

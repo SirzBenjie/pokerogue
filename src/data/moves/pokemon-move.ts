@@ -18,7 +18,7 @@ export interface SerializedPokemonMove {
    * If defined and nonzero, overrides the maximum PP of the move (e.g., due to move being copied by Transform).
    * This also nullifies all effects of `ppUp`.
    */
-  maxPpOverride?: number;
+  maxPpOverride?: number | undefined;
 }
 /**
  * Wrapper class for the {@linkcode Move} class for Pokemon to interact with.
@@ -37,7 +37,7 @@ export class PokemonMove implements SerializedPokemonMove {
   public moveId: MoveId;
   public ppUsed: number;
   public ppUp: number;
-  public maxPpOverride?: number;
+  public maxPpOverride?: number | undefined;
 
   constructor(moveId: MoveId, ppUsed = 0, ppUp = 0, maxPpOverride?: number) {
     this.moveId = moveId;
@@ -49,8 +49,6 @@ export class PokemonMove implements SerializedPokemonMove {
   /**
    * Checks whether this move can be performed by a Pokemon, without consideration for the move's targets.
    * The move is unusable if it is out of PP, restricted by an effect, or unimplemented.
-   *
-   * Should not be confused with {@linkcode isSelectable}, which only checks if the move can be selected by a Pokemon.
    *
    * @param pokemon - The {@linkcode Pokemon} attempting to use this move
    * @param ignorePp - Whether to ignore checking if the move is out of PP; default `false`
@@ -66,7 +64,7 @@ export class PokemonMove implements SerializedPokemonMove {
       return [false, i18next.t("battle:moveNotImplemented", { moveName: moveName.replace(" (N)", "") })];
     }
 
-    if (!ignorePp && move.pp !== -1 && this.ppUsed >= this.getMovePp()) {
+    if (!ignorePp && this.isOutOfPp()) {
       return [false, i18next.t("battle:moveNoPp", { moveName: move.name })];
     }
 
@@ -87,17 +85,6 @@ export class PokemonMove implements SerializedPokemonMove {
 
   getMove(): Move {
     return allMoves[this.moveId];
-  }
-
-  /**
-   * Determine whether the move can be selected by the pokemon based on its own requirements
-   * @remarks
-   * Does not check for PP, moves blocked by challenges, or unimplemented moves, all of which are handled by {@linkcode isUsable}
-   * @param pokemon - The Pokemon under consideration
-   * @returns An tuple containing a boolean indicating whether the move can be selected, and a string with the reason if it cannot
-   */
-  public isSelectable(pokemon: Pokemon): [selectable: boolean, preventionText: string] {
-    return pokemon.isMoveSelectable(this.moveId);
   }
 
   /**

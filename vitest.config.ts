@@ -4,59 +4,72 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+// NB: We cannot use `#XYZ` imports in this file since `vite-tsconfig-paths` has not been initialized yet.
+
+import type { UserConfig } from "vite";
 import { defineConfig } from "vitest/config";
 import { BaseSequencer, type TestSpecification } from "vitest/node";
-import { defaultConfig } from "./vite.config";
+import { TEST_TIMEOUT } from "./test/constants";
+import { sharedConfig } from "./vite.config";
+
+const customReporterFile = "./test/reporters/custom-default-reporter.ts" as const;
 
 // biome-ignore lint/style/noDefaultExport: required for vitest
-export default defineConfig(({ mode }) => ({
-  ...defaultConfig,
-  test: {
-    reporters: process.env.GITHUB_ACTIONS
-      ? ["github-actions", "./test/test-utils/reporters/custom-default-reporter.ts"]
-      : ["./test/test-utils/reporters/custom-default-reporter.ts"],
-    env: {
-      TZ: "UTC",
-    },
-    testTimeout: 20_000,
-    slowTestThreshold: 10_000,
-    // TODO: Consider enabling
-    // expect: {requireAssertions: true},
-    setupFiles: ["./test/setup/font-face.setup.ts", "./test/setup/vitest.setup.ts", "./test/setup/matchers.setup.ts"],
-    sequence: {
-      sequencer: MySequencer,
-    },
-    includeTaskLocation: true,
-    environment: "jsdom" as const,
-    environmentOptions: {
-      jsdom: {
-        resources: "usable",
+export default defineConfig(async config => {
+  const viteConfig = await sharedConfig(config);
+  const opts: UserConfig = {
+    ...viteConfig,
+    test: {
+      passWithNoTests: false,
+      reporters: process.env.MERGE_REPORTS
+        ? ["github-actions", customReporterFile]
+        : process.env.GITHUB_ACTIONS
+          ? ["blob", customReporterFile]
+          : [customReporterFile],
+      env: {
+        TZ: "UTC",
       },
-    },
+      isolate: false,
+      testTimeout: TEST_TIMEOUT,
+      slowTestThreshold: TEST_TIMEOUT / 2,
+      // TODO: Vitest's current framework produces spurious errors for type tests with this option enabled.
+      // We should move our type tests to a separate folder not covered by normal tests, and then enable the option.
+      // expect: {
+      //   requireAssertions: true,
+      // },
+      setupFiles: ["./test/setup/font-face.setup.ts", "./test/setup/vitest.setup.ts", "./test/setup/matchers.setup.ts"],
+      sequence: {
+        sequencer: MySequencer,
+      },
+      includeTaskLocation: true,
+      environment: "jsdom",
+      environmentOptions: {
+        jsdom: {
+          resources: "usable",
+        },
+      },
     typecheck: {
       only: true,
       ignoreSourceErrors: true,
       tsconfig: "tsconfig.json",
-      include: ["./test/types/**/*.{test,spec}-d.?(c|m)[jt]s?(x)"],
+      include: ["./test/tests/types/**/*.{test,spec}-d.?(c|m)[jt]s?(x)"],
       // Type checking from vitest should only include the errors from source
     },
-    threads: false,
-    trace: true,
-    restoreMocks: true,
-    watch: false,
-    coverage: {
-      provider: "istanbul" as const,
-      reportsDirectory: "coverage" as const,
-      reporters: ["text-summary", "html"],
+      restoreMocks: true,
+      watch: false,
+      coverage: {
+        provider: "v8",
+        reportsDirectory: "coverage",
+        reporter: process.env.MERGE_REPORTS ? ["text-summary", "json-summary"] : [],
+        exclude: ["{src,test}/**/*.d.ts"],
+        include: ["src/**/*.ts", "test/utils/**/*.ts"],
+      },
+      name: "main",
+      include: ["./test/**/*.{test,spec}.ts"],
     },
-    name: "main",
-    include: ["./test/**/*.{test,spec}.ts"],
-  },
-  esbuild: {
-    pure: mode === "production" ? ["console.log"] : [],
-    keepNames: true,
-  },
-}));
+  };
+  return opts;
+});
 
 //#region Helpers
 
@@ -64,7 +77,7 @@ export default defineConfig(({ mode }) => ({
  * Class for sorting test files in the desired order.
  */
 class MySequencer extends BaseSequencer {
-  async sort(files: TestSpecification[]) {
+  public override async sort(files: TestSpecification[]) {
     files = await super.sort(files);
 
     return files.sort((a, b) => {
