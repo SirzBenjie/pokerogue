@@ -203,7 +203,8 @@
                 "selector": {
                   "kind": "typeAlias"
                 },
-                "formats": ["PascalCase"]
+                "formats": ["PascalCase"],
+                "match": "(?:Z\\$)?(.*)"
               },
               {
                 "selector": {
