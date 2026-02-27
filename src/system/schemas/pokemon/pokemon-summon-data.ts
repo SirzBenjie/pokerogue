@@ -32,9 +32,10 @@ export const Z$SerializedSpeciesForm = z.object({
 export const Z$PokemonSummonData = z.object({
   statSages: z.array(z.int().min(-6).max(6).catch(0)).optional().catch(undefined),
   moveQueue: z.array(Z$TurnMove).optional().catch(undefined),
-  tags: Z$BattlerTag.array().refine(arr =>
-    arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined),
-  ),
+  tags: Z$BattlerTag.array()
+    .refine(arr => arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined))
+    .optional()
+    .catch(undefined),
   abilitySuppressed: z.boolean().optional().catch(undefined),
   speciesForm: Z$SerializedSpeciesForm.optional().catch(undefined),
   ability: Z$NonNegativeInt.optional().catch(undefined),
@@ -46,4 +47,5 @@ export const Z$PokemonSummonData = z.object({
   types: z.array(Z$PokemonType).optional().catch(undefined),
   addedType: Z$PokemonType.optional().catch(undefined),
   illusion: Z$IllusionData.optional().catch(undefined),
+  abilitiesApplied: z.array(Z$NonNegativeInt).optional().catch(undefined),
 }) satisfies z.ZodType<SerializedPokemonSummonData>;

@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// biome-ignore lint/correctness/noUnusedImports: used in TSDoc
 import type { CritBoostTag } from "#data/battler-tags";
 import { BattlerTagType } from "#enums/battler-tag-type";
 import { MoveId } from "#enums/move-id";
@@ -64,8 +63,6 @@ const Z$BasicBattlerTag = /** @__PURE__ */ z.literal([
   BattlerTagType.FLOATING,
   BattlerTagType.MINIMIZED,
   BattlerTagType.DESTINY_BOND,
-  BattlerTagType.ICE_FACE,
-  BattlerTagType.DISGUISE,
   BattlerTagType.RECEIVE_DOUBLE_DAMAGE,
   BattlerTagType.ALWAYS_GET_HIT,
   BattlerTagType.IGNORE_GHOST,

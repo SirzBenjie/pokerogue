@@ -164,7 +164,7 @@ describe("Zod Schemas - No missing Enum values", () => {
     });
 
     test("SerializableBattlerTagType", () => {
-      type typesInSchema =
+      type TypesInSchema =
         | Z$SubstituteTagType
         | Z$AutotomizedTagType
         | Z$StockpilingTagType
@@ -177,7 +177,7 @@ describe("Zod Schemas - No missing Enum values", () => {
       // Unlike for arena tags, we can't match on the "tagType" field of SerializableBattlerTag,
       // as some tags are just instances of the class rather than deriving it,
       // and so it does not have a specific "tagType" field.
-      expectTypeOf<typesInSchema>().toEqualTypeOf<SerializableBattlerTagType>();
+      expectTypeOf<TypesInSchema>().toEqualTypeOf<SerializableBattlerTagType>();
     });
   });
 

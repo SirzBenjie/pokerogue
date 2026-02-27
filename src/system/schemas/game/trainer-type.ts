@@ -9,127 +9,140 @@ import type { TrainerType } from "#enums/trainer-type";
 import { z } from "zod";
 
 /**
- * Zod type for {@linkcode TrainerType} as of version 1.10
+ * Zod type for {@linkcode TrainerType} as of version 1.11
  *
  * @remarks
  * - `0`: UNKNOWN
  * - `1`: ACE_TRAINER
- * - `2`: ARTIST
- * - `3`: BACKERS
- * - `4`: BACKPACKER
- * - `5`: BAKER
- * - `6`: BEAUTY
- * - `7`: BIKER
- * - `8`: BLACK_BELT
- * - `9`: BREEDER
- * - `10`: CLERK
- * - `11`: CYCLIST
- * - `12`: DANCER
- * - `13`: DEPOT_AGENT
- * - `14`: DOCTOR
- * - `15`: FIREBREATHER
- * - `16`: FISHERMAN
- * - `17`: GUITARIST
- * - `18`: HARLEQUIN
- * - `19`: HIKER
- * - `20`: HOOLIGANS
- * - `21`: HOOPSTER
- * - `22`: INFIELDER
- * - `23`: JANITOR
- * - `24`: LINEBACKER
- * - `25`: MAID
- * - `26`: MUSICIAN
- * - `27`: HEX_MANIAC
- * - `28`: NURSERY_AIDE
- * - `29`: OFFICER
- * - `30`: PARASOL_LADY
- * - `31`: PILOT
- * - `32`: POKEFAN
- * - `33`: PRESCHOOLER
- * - `34`: PSYCHIC
- * - `35`: RANGER
- * - `36`: RICH
- * - `37`: RICH_KID
- * - `38`: ROUGHNECK
- * - `39`: SAILOR
- * - `40`: SCIENTIST
- * - `41`: SMASHER
- * - `42`: SNOW_WORKER
- * - `43`: STRIKER
- * - `44`: SCHOOL_KID
- * - `45`: SWIM
- * - `46`: TWINS
- * - `47`: VETERAN
- * - `48`: WAITER
- * - `49`: WORKER
- * - `50`: YOUNGSTER
- * - `51`: ROCKET_GRUNT
- * - `52`: ARCHER
- * - `53`: ARIANA
- * - `54`: PROTON
- * - `55`: PETREL
- * - `56`: MAGMA_GRUNT
- * - `57`: TABITHA
- * - `58`: COURTNEY
- * - `59`: AQUA_GRUNT
- * - `60`: MATT
- * - `61`: SHELLY
- * - `62`: GALACTIC_GRUNT
- * - `63`: JUPITER
- * - `64`: MARS
- * - `65`: SATURN
- * - `66`: PLASMA_GRUNT
- * - `67`: ZINZOLIN
- * - `68`: COLRESS
- * - `69`: FLARE_GRUNT
- * - `70`: BRY
- * - `71`: XEROSIC
- * - `72`: AETHER_GRUNT
- * - `73`: FABA
- * - `74`: SKULL_GRUNT
- * - `75`: PLUMERIA
- * - `76`: MACRO_GRUNT
- * - `77`: OLEANA
- * - `78`: STAR_GRUNT
- * - `79`: GIACOMO
- * - `80`: MELA
- * - `81`: ATTICUS
- * - `82`: ORTEGA
- * - `83`: ERI
- * - `84`: ROCKET_BOSS_GIOVANNI_1
- * - `85`: ROCKET_BOSS_GIOVANNI_2
- * - `86`: MAXIE
- * - `87`: MAXIE_2
- * - `88`: ARCHIE
- * - `89`: ARCHIE_2
- * - `90`: CYRUS
- * - `91`: CYRUS_2
- * - `92`: GHETSIS
- * - `93`: GHETSIS_2
- * - `94`: LYSANDRE
- * - `95`: LYSANDRE_2
- * - `96`: LUSAMINE
- * - `97`: LUSAMINE_2
- * - `98`: GUZMA
- * - `99`: GUZMA_2
- * - `100`: ROSE
- * - `101`: ROSE_2
- * - `102`: PENNY
- * - `103`: PENNY_2
- * - `104`: BUCK
- * - `105`: CHERYL
- * - `106`: MARLEY
- * - `107`: MIRA
- * - `108`: RILEY
- * - `109`: VICTOR
- * - `110`: VICTORIA
- * - `111`: VIVI
- * - `112`: VICKY
- * - `113`: VITO
- * - `114`: BUG_TYPE_SUPERFAN
- * - `115`: EXPERT_POKEMON_BREEDER
- * - `116`: FUTURE_SELF_M
- * - `117`: FUTURE_SELF_F
+ * - `2`: AROMA_LADY
+ * - `3`: ARTIST
+ * - `4`: BACKERS
+ * - `5`: BACKPACKER
+ * - `6`: BAKER
+ * - `7`: BEAUTY
+ * - `8`: BIKER
+ * - `9`: BIRD_KEEPER
+ * - `10`: BLACK_BELT
+ * - `11`: BREEDER
+ * - `12`: BUG_CATCHER
+ * - `13`: CAMPER
+ * - `14`: CLERK
+ * - `15`: COLLECTOR
+ * - `16`: CYCLIST
+ * - `17`: DANCER
+ * - `18`: DEPOT_AGENT
+ * - `19`: DOCTOR
+ * - `20`: DRAGON_TAMER
+ * - `21`: FAIRY_TALE_GIRL
+ * - `22`: FIREBREATHER
+ * - `23`: FISHERMAN
+ * - `24`: GUITARIST
+ * - `25`: HARLEQUIN
+ * - `26`: HEX_MANIAC
+ * - `27`: HIKER,
+ * - `28`: HOOLIGANS,
+ * - `29`: HOOPSTER,
+ * - `30`: INFIELDER,
+ * - `31`: INTERVIEWERS,
+ * - `32`: JANITOR,
+ * - `33`: LINEBACKER,
+ * - `34`: MAID,
+ * - `35`: MUSICIAN,
+ * - `36`: MYSTERIOUS_SISTERS,
+ * - `37`: NURSERY_AIDE,
+ * - `38`: OFFICER,
+ * - `39`: PARASOL_LADY,
+ * - `40`: PILOT,
+ * - `41`: POKEFAN,
+ * - `42`: PRESCHOOLER,
+ * - `43`: PSYCHIC,
+ * - `44`: RANGER,
+ * - `45`: RICH,
+ * - `46`: RICH_KID,
+ * - `47`: ROUGHNECK,
+ * - `48`: RUIN_MANIAC,
+ * - `49`: SAILOR,
+ * - `50`: SCIENTIST,
+ * - `51`: SCUBA_DIVER,
+ * - `52`: SMASHER,
+ * - `53`: SNOW_ACE_TRAINER,
+ * - `54`: SNOW_WORKER,
+ * - `55`: STRIKER,
+ * - `56`: SCHOOL_KID,
+ * - `57`: SWIMMER,
+ * - `58`: TWINS,
+ * - `59`: VETERAN,
+ * - `60`: WAITER,
+ * - `61`: WORKER,
+ * - `62`: YOUNG_COUPLE,
+ * - `63`: YOUNGSTER,
+ * - `64`: ROCKET_GRUNT
+ * - `65`: ARCHER
+ * - `66`: ARIANA
+ * - `67`: PROTON
+ * - `68`: PETREL
+ * - `69`: MAGMA_GRUNT
+ * - `70`: TABITHA
+ * - `71`: COURTNEY
+ * - `72`: AQUA_GRUNT
+ * - `73`: MATT
+ * - `74`: SHELLY
+ * - `75`: GALACTIC_GRUNT
+ * - `76`: JUPITER
+ * - `77`: MARS
+ * - `78`: SATURN
+ * - `79`: PLASMA_GRUNT
+ * - `80`: ZINZOLIN
+ * - `81`: COLRESS
+ * - `82`: FLARE_GRUNT
+ * - `83`: BRY
+ * - `84`: XEROSIC
+ * - `85`: AETHER_GRUNT
+ * - `86`: FABA
+ * - `87`: SKULL_GRUNT
+ * - `88`: PLUMERIA
+ * - `89`: MACRO_GRUNT
+ * - `90`: OLEANA
+ * - `91`: STAR_GRUNT
+ * - `92`: GIACOMO
+ * - `93`: MELA
+ * - `94`: ATTICUS
+ * - `95`: ORTEGA
+ * - `96`: ERI
+ * - `97`: ROCKET_BOSS_GIOVANNI_1
+ * - `98`: ROCKET_BOSS_GIOVANNI_2
+ * - `99`: MAXIE
+ * - `100`: MAXIE_2
+ * - `101`: ARCHIE
+ * - `102`: ARCHIE_2
+ * - `103`: CYRUS
+ * - `104`: CYRUS_2
+ * - `105`: GHETSIS
+ * - `106`: GHETSIS_2
+ * - `107`: LYSANDRE
+ * - `108`: LYSANDRE_2
+ * - `109`: LUSAMINE
+ * - `110`: LUSAMINE_2
+ * - `111`: GUZMA
+ * - `112`: GUZMA_2
+ * - `113`: ROSE
+ * - `114`: ROSE_2
+ * - `115`: PENNY
+ * - `116`: PENNY_2
+ * - `117`: BUCK
+ * - `118`: CHERYL
+ * - `119`: MARLEY
+ * - `120`: MIRA
+ * - `121`: RILEY
+ * - `122`: VICTOR
+ * - `123`: VICTORIA
+ * - `124`: VIVI
+ * - `125`: VICKY
+ * - `126`: VITO
+ * - `127`: BUG_TYPE_SUPERFAN
+ * - `128`: EXPERT_POKEMON_BREEDER
+ * - `129`: FUTURE_SELF_M
+ * - `130`: FUTURE_SELF_F
  * - `200`: BROCK
  * - `201`: MISTY
  * - `202`: LT_SURGE
@@ -234,17 +247,18 @@ import { z } from "zod";
  * - `327`: KAHILI
  * - `328`: MARNIE_ELITE
  * - `329`: NESSA_ELITE
- * - `330`: BEA_ELITE
- * - `331`: ALLISTER_ELITE
- * - `332`: RAIHAN_ELITE
- * - `333`: RIKA
- * - `334`: POPPY
- * - `335`: LARRY_ELITE
- * - `336`: HASSEL
- * - `337`: CRISPIN
- * - `338`: AMARYS
- * - `339`: LACEY
- * - `340`: DRAYTON
+ * - `330`: BEDE_ELITE
+ * - `331`: BEA_ELITE
+ * - `332`: ALLISTER_ELITE
+ * - `333`: RAIHAN_ELITE
+ * - `334`: RIKA
+ * - `335`: POPPY
+ * - `336`: LARRY_ELITE
+ * - `337`: HASSEL
+ * - `338`: CRISPIN
+ * - `339`: AMARYS
+ * - `340`: LACEY
+ * - `341`: DRAYTON
  * - `350`: BLUE
  * - `351`: RED
  * - `352`: LANCE_CHAMPION
@@ -273,11 +287,11 @@ export const Z$TrainerType = z.literal([
   32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
   61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
   90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
-  115, 116, 117, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
-  220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242,
-  243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265,
-  266, 267, 268, 269, 270, 271, 272, 273, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314,
-  315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337,
-  338, 339, 340, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 375, 376, 377, 378,
-  379, 380,
+  115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 200, 201, 202, 203, 204, 205, 206,
+  207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229,
+  230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252,
+  253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 300, 301,
+  302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324,
+  325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 350, 351, 352, 353, 354, 355,
+  356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 375, 376, 377, 378, 379, 380,
 ]) satisfies z.ZodType<TrainerType>;

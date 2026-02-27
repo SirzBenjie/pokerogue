@@ -92,10 +92,10 @@ export interface SerializedIllusionData extends Omit<IllusionData, "fusionSpecie
 
 export interface SerializedPokemonSummonData {
   statStages?: number[];
-  moveQueue?: TurnMove[];
-  tags?: BattlerTag[];
-  abilitySuppressed?: boolean;
-  abilitiesApplied: AbilityId[];
+  moveQueue?: TurnMove[] | undefined;
+  tags?: BattlerTag[] | undefined;
+  abilitySuppressed?: boolean | undefined;
+  abilitiesApplied?: AbilityId[] | undefined;
   speciesForm?: SerializedSpeciesForm | undefined;
   fusionSpeciesForm?: SerializedSpeciesForm | undefined;
   ability?: AbilityId | undefined;
@@ -106,7 +106,7 @@ export interface SerializedPokemonSummonData {
   moveset?: SerializedPokemonMove[] | undefined;
   types?: PokemonType[] | undefined;
   addedType?: PokemonType | undefined;
-  illusion?: SerializedIllusionData |  undefined;
+  illusion?: SerializedIllusionData | undefined;
   berriesEatenLast?: BerryType[] | undefined;
   moveHistory?: TurnMove[] | undefined;
 }

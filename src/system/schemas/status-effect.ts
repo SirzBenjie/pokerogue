@@ -5,11 +5,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// biome-ignore lint/correctness/noUnusedImports: used in tsdoc comment
 import type { Status } from "#data/status-effect";
 import { StatusEffect } from "#enums/status-effect";
+import { Z$NonNegativeInt, Z$PositiveInt } from "#schemas/common";
 import { z } from "zod";
-import { Z$NonNegativeInt, Z$PositiveInt } from "../common";
 
 /**
  * Zod schema for the {@linkcode StatusEffect} enum

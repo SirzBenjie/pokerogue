@@ -24,8 +24,9 @@ import { z } from "zod";
  * - `7`: Limited Catch
  * - `8`: Limited Support
  * - `9`: Hardcore
+ * - `10`: Passives
  */
-export const Z$Challenges = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) satisfies z.ZodType<Challenges>;
+export const Z$Challenges = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) satisfies z.ZodType<Challenges>;
 
 /**
  * Zod schema for {@linkcode ChallengeData} as of version 1.10
