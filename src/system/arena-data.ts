@@ -13,7 +13,7 @@ export interface SerializedArenaData {
   terrain: SerializedTerrain | null;
   tags?: ArenaTagData[];
   positionalTags: SerializedPositionalTag[];
-  playerTerasUsed?: number;
+  playerTerasUsed?: number | undefined;
 }
 
 export class ArenaData {
