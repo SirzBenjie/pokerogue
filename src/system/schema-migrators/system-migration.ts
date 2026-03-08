@@ -19,7 +19,7 @@ const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
  * Parse serialized session save data into the SessionSaveData object
  *
  * @param data - The data to parse
- * @returns
+ * @returns The parsed session save data
  *
  * @throws {SessionMigrationError} if migration fails
  */

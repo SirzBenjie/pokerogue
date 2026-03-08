@@ -3055,7 +3055,7 @@ export class AutotomizedTag extends SerializableBattlerTag {
 export class SubstituteTag extends SerializableBattlerTag {
   public override readonly tagType = BattlerTagType.SUBSTITUTE;
   /** The substitute's remaining HP. If HP is depleted, the Substitute fades. */
-  public hp: number;
+  public hp = 1;
 
   //#region non-serializable properties
   /** A reference to the sprite representing the Substitute doll */
@@ -3638,7 +3638,7 @@ export class MagicCoatTag extends BattlerTag {
 export class SupremeOverlordTag extends AbilityBattlerTag {
   public override readonly tagType = BattlerTagType.SUPREME_OVERLORD;
   /** The number of faints at the time the user was sent out */
-  public readonly faintCount: number;
+  public readonly faintCount: number = 0;
   constructor() {
     super(BattlerTagType.SUPREME_OVERLORD, AbilityId.SUPREME_OVERLORD, BattlerTagLapseType.FAINT, 0);
   }

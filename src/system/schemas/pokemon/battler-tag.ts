@@ -201,15 +201,25 @@ export type Z$AutotomizedTagType = z.infer<typeof Z$AutotomizedTag>["tagType"];
 const Z$SubstituteTag = /** @__PURE__ */ z.object({
   ...Z$BaseBattlerTag.shape,
   tagType: z.literal(BattlerTagType.SUBSTITUTE),
-  // hp: Z$PositiveInt,
+  hp: Z$PositiveInt,
 });
 /** Tag type for the {@linkcode Z$SubstituteTag} schema */
 export type Z$SubstituteTagType = z.infer<typeof Z$SubstituteTag>["tagType"];
+
+const Z$SupremeOverlordTag = /** @__PURE__ */ z.object({
+  ...Z$BaseBattlerTag.shape,
+  tagType: z.literal(BattlerTagType.SUPREME_OVERLORD),
+  faintCount: Z$NonNegativeInt.catch(0),
+  // No additional fields for this tag, but it needs to be separate from the plain tags for type safety reasons.
+});
+/** Tag type for the {@linkcode Z$SupremeOverlordTag} schema */
+export type Z$SupremeOverlordTagType = z.infer<typeof Z$SupremeOverlordTag>["tagType"];
 
 // Tag order is intentional here, from fewest matching tag types to most
 
 /** Zod schema for an arbitrary {@linkcode BattlerTag} as of version 1.10 */
 export const Z$BattlerTag = z.discriminatedUnion("tagType", [
+  Z$SupremeOverlordTag,
   Z$SubstituteTag,
   Z$AutotomizedTag,
   Z$StockpilingTag,
