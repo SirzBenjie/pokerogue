@@ -6,6 +6,7 @@
  */
 
 import type { SerializedPokemonSummonData } from "#data/pokemon-data";
+import { Z$BerryType } from "#system/schemas/berry-type";
 import { Z$NonNegativeInt } from "#system/schemas/common";
 import { Z$PokemonMove } from "#system/schemas/moves/pokemon-move";
 import { Z$TurnMove } from "#system/schemas/moves/turn-move";
@@ -32,12 +33,14 @@ export const Z$SerializedSpeciesForm = z.object({
 export const Z$PokemonSummonData = z.object({
   statSages: z.array(z.int().min(-6).max(6).catch(0)).optional().catch(undefined),
   moveQueue: z.array(Z$TurnMove).optional().catch(undefined),
-  tags: Z$BattlerTag.array()
-    .refine(arr => arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined))
-    .optional()
-    .catch(undefined),
+  tags: z
+    .array(Z$BattlerTag.catch(undefined))
+    .transform(arr => arr.filter((tag): tag is Exclude<typeof tag, undefined> => tag !== undefined))
+    .optional(),
   abilitySuppressed: z.boolean().optional().catch(undefined),
+  abilitiesApplied: z.array(Z$NonNegativeInt).optional().catch(undefined),
   speciesForm: Z$SerializedSpeciesForm.optional().catch(undefined),
+  fusionSpeciesForm: Z$SerializedSpeciesForm.optional().catch(undefined),
   ability: Z$NonNegativeInt.optional().catch(undefined),
   passiveAbility: Z$NonNegativeInt.optional().catch(undefined),
   gender: Z$Gender.optional().catch(undefined),
@@ -47,5 +50,9 @@ export const Z$PokemonSummonData = z.object({
   types: z.array(Z$PokemonType).optional().catch(undefined),
   addedType: Z$PokemonType.optional().catch(undefined),
   illusion: Z$IllusionData.optional().catch(undefined),
-  abilitiesApplied: z.array(Z$NonNegativeInt).optional().catch(undefined),
+  berriesEatenLast: z
+    .array(Z$BerryType.optional().catch(undefined))
+    .transform(arr => arr.filter((berry): berry is Exclude<typeof berry, undefined> => berry !== undefined))
+    .optional(),
+  moveHistory: z.array(Z$TurnMove).optional().catch(undefined),
 }) satisfies z.ZodType<SerializedPokemonSummonData>;

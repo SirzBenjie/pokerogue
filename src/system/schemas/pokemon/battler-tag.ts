@@ -201,7 +201,7 @@ export type Z$AutotomizedTagType = z.infer<typeof Z$AutotomizedTag>["tagType"];
 const Z$SubstituteTag = /** @__PURE__ */ z.object({
   ...Z$BaseBattlerTag.shape,
   tagType: z.literal(BattlerTagType.SUBSTITUTE),
-  hp: Z$PositiveInt,
+  hp: Z$PositiveInt.catch(1),
 });
 /** Tag type for the {@linkcode Z$SubstituteTag} schema */
 export type Z$SubstituteTagType = z.infer<typeof Z$SubstituteTag>["tagType"];

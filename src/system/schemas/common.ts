@@ -28,3 +28,6 @@ export const Z$OptionalNonNegativeIntCatchToUndef = z.int().nonnegative().option
 
 /** Reusable schema for an optional string that catches to undefined */
 export const Z$OptionalStringCatchToUndef = z.string().optional().catch(undefined);
+
+/** Reusable schema for a uint32 integer, equivalent to `z.uint32()`. */
+export const Z$UInt32 = z.uint32();

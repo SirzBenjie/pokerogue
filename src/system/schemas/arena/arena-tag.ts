@@ -5,10 +5,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import type { EntryHazardTag, SerializableArenaTag, SuppressAbilitiesTag } from "#data/arena-tag";
+import type { EntryHazardTag, PendingHealTag, SerializableArenaTag, SuppressAbilitiesTag } from "#data/arena-tag";
 import type { ArenaTagSide } from "#enums/arena-tag-side";
 import { ArenaTagType } from "#enums/arena-tag-type";
-import { Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
+import type { BattlerIndex } from "#enums/battler-index";
+import { MoveId } from "#enums/move-id";
+import { Z$BoolCatchToFalse, Z$NonNegativeInt, Z$PositiveInt } from "#system/schemas/common";
+import { Z$BattlerIndex } from "#system/schemas/pokemon/battler-index";
 import type { EntryHazardTagType, SerializableArenaTagType } from "#types/arena-tags";
 import type { DiscriminatedUnionFake } from "#types/schema-helpers";
 import type { NonFunctionProperties } from "#types/type-helpers";
@@ -128,11 +131,33 @@ const Z$SuppressAbilitiesTag = /** __@PURE__ */ z.object({
 /** Tag type(s) in the {@linkcode Z$SuppressAbilitiesTag} schema */
 export type Z$SuppressAbilitiesTagType = z.infer<typeof Z$SuppressAbilitiesTag>["tagType"];
 
+export const Z$PendingHealEffect = z.object({
+  sourceId: Z$PositiveInt,
+  moveId: Z$NonNegativeInt.catch(MoveId.NONE),
+  restorePP: Z$BoolCatchToFalse,
+  healMessage: z.string().catch(""),
+}) satisfies z.ZodType<NonFunctionProperties<Exclude<PendingHealTag["pendingHeals"][BattlerIndex], undefined>[number]>>;
+
+/**
+ * Zod schema for {@linkcode ArenaTagType.PENDING_HEAL} as of version 1.11
+ */
+const Z$PendingHealTag = /** __@PURE__ */ z.object({
+  ...Z$BaseArenaTag.shape,
+  tagType: z.literal(ArenaTagType.PENDING_HEAL),
+  pendingHeals: z.partialRecord(
+    Z$BattlerIndex,
+    z
+      .array(Z$PendingHealEffect.optional().catch(undefined))
+      .transform(arr => arr.filter((effect): effect is Exclude<typeof effect, undefined> => effect !== undefined)),
+  ),
+}) satisfies z.ZodType<NonFunctionProperties<PendingHealTag>>;
+
 /**
  * Zod schema for {@linkcode SerializableArenaTag}s as of version 1.10,
  * also permitting "NoneTag".
  */
 export const Z$ArenaTag = /** @__PURE__ */ z.discriminatedUnion("tagType", [
+  Z$PendingHealTag,
   Z$EntryHazardTag,
   Z$SuppressAbilitiesTag,
   Z$PlainArenaTag,
