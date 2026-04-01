@@ -13,9 +13,10 @@ import { Z$TrainerData } from "#system/schemas/game/trainer-data";
 import { Z$GameModes } from "#system/schemas/game-mode";
 import { Z$PokeballType } from "#system/schemas/pokeball-type";
 import { Z$PokemonData } from "#system/schemas/pokemon/pokemon-data";
-// biome-ignore lint/correctness/noUnusedImports: used in TSDoc
 import type { SessionSaveData } from "#types/save-data";
 import { z } from "zod";
+import { Z$MysteryEncounterSaveData } from "./mystery-encounters/mystery-encounter";
+import { Z$MysteryEncounterType } from "./mystery-encounters/mystery-encounter-type";
 
 /**
  * Zod schema for {@linkcode SessionSaveData} as of version 1.10
@@ -36,10 +37,12 @@ export const Z$SessionSaveData = z.looseObject({
   battleType: Z$BattleType,
   trainer: Z$TrainerData.optional().catch(undefined),
   gameVersion: z.string(),
-  name: z.string().optional().catch(""),
+  name: z.string().catch(""),
   timestamp: Z$NonNegativeInt,
   challenges: Z$ChallengeData.array(),
+  mysteryEncounterType: Z$MysteryEncounterType.or(z.literal(-1)).catch(-1),
+  mysteryEncounterSaveData: Z$MysteryEncounterSaveData.optional().catch(undefined),
   playerFaints: Z$NonNegativeInt.catch(0),
-}) /* satisfies z.ZodType<Omit<SessionSaveData, "modifiers" | "enemyModifiers">> */;
+});
 
 export type ParsedSessionSaveData = z.output<typeof Z$SessionSaveData>;
