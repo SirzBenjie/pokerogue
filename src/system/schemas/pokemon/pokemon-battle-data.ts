@@ -19,7 +19,10 @@ import { z } from "zod";
 export const Z$PokemonBattleData = z.object({
   hitCount: Z$NonNegativeInt.optional().catch(undefined),
   hasEatenBerry: z.boolean().optional().catch(undefined),
-  berriesEaten: z.array(Z$BerryType).optional().catch(undefined),
+  berriesEaten: z
+    .array(Z$BerryType.optional().catch(undefined))
+    .transform(b => b.filter(e => e != null))
+    .catch([]),
 });
 
 export type ParsedPokemonBattleData = z.output<typeof Z$PokemonBattleData>;

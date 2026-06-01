@@ -1,5 +1,6 @@
 import { Z$PositiveInt } from "#schemas/common";
 import z from "zod";
+import { Z$HeldItemModifier } from "./held-item-modifiers";
 
 /**
  * List of "player" modifiers as of 1.11:
@@ -190,3 +191,26 @@ export const Z$MoneyMultiplierModifier = z.object({
   stackCount: Z$PositiveInt,
   // args: always an empty array
 });
+
+
+/**
+ * Modifiers not attached to a specific Pokémon
+ */
+export const Z$TrainerModifier = z.union([
+  Z$GigantamaxAccessModifier,
+  Z$LevelIncrementBoosterModifier,
+  Z$ExpShareModifier,
+  Z$ExpBoosterModifier,
+  Z$DoubleBattleChanceBoosterModifier,
+  Z$TempStatStageBoosterModifier,
+  Z$TempCritBoosterModifier,
+  Z$ExtraModifier,
+  Z$IvScannerModifier,
+  Z$HealingBoosterModifier,
+  Z$HiddenAbilityRateBoosterModifier,
+  Z$MoneyMultiplierModifier,
+]);
+
+export type ParsedPlayerModifier = z.output<typeof Z$TrainerModifier>;
+
+export const Z$Modifier = z.union([Z$TrainerModifier, Z$HeldItemModifier]);

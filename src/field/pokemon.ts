@@ -445,6 +445,10 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
       this.stellarTypesBoosted = [];
     }
 
+    // Parse failures may cause tera type to be set as unknown. In this case, set it to the species' primary type as a reasonable fallback.
+    if (this.teraType === PokemonType.UNKNOWN) {
+      this.teraType = this.getSpeciesForm(true, false).type1;
+    }
     this.summonData = new PokemonSummonData(dataSource?.summonData);
     this.battleData = new PokemonBattleData(dataSource?.battleData);
 

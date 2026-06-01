@@ -83,6 +83,7 @@ import { getPokemonSpecies } from "#utils/pokemon-utils";
 import { toCamelCase } from "#utils/strings";
 import { AES, enc } from "crypto-js";
 import i18next from "i18next";
+import { parseSessionData } from "./schema-migrators/system-migration";
 
 function getDataTypeKey(dataType: GameDataType, slotId = 0): string {
   switch (dataType) {
@@ -1168,6 +1169,13 @@ export class GameData {
     // TODO: Add `null`/`undefined` to the corresponding type signatures for this
     // (or prevent them from being null)
     // If the value is able to *not exist*, it should say so in the code
+    // Get session data
+
+    // return parseSessionData(JSON.parse(dataStr));
+    const data = parseSessionData(JSON.parse(dataStr));
+
+    // Once data is parsed, it must be transformed into the correct classes.
+
     const sessionData = JSON.parse(dataStr, (k: string, v: any) => {
       // TODO: Move this to occur _after_ migrate scripts (and refactor all non-assignment duties into migrate scripts)
       // This should ideally be just a giant assign block

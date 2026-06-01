@@ -52,3 +52,13 @@ export const Z$AttackTypeBoosterItemModifier = z.object({
   className: z.literal("AttackTypeBoosterItemModifier"),
   args: z.tuple([Z$AttackTypeBoosterItem]), // The first argument is the attack type ID
 });
+
+
+export const Z$HeldItemModifier = z.union([
+  Z$HitHealModifier,
+  Z$PokemonNatureWeightModifier,
+  Z$AttackTypeBoosterItemModifier,
+  // Add more held item modifiers here as needed
+]);
+
+export type ParsedHeldItemModifier = z.output<typeof Z$HeldItemModifier>;

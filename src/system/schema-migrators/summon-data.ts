@@ -40,6 +40,7 @@ export const Z$V1_9_IllusionData = z.looseObject({
     .optional()
     .catch(undefined),
 });
+// biome-ignore lint/style/useNamingConvention: Exception for this type
 type V1_9_IllusionData = z.input<typeof Z$V1_9_IllusionData>;
 
 /**

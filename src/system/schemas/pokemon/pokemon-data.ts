@@ -89,7 +89,7 @@ export const Z$PlayerPokemonData = z.object({
   // 0 is unknown, -1 is starter
   metWave: z.int().min(-1).default(0),
   usedTms: z.array(Z$PositiveInt).catch([]),
-  // Fallback for empty pokemon movesets handled by transformer
+  // Fallback for empty pokemon movesets should be handled by transformer
   moveset: z.array(Z$PokemonMove).catch([]),
 });
 

@@ -1,6 +1,7 @@
 import { SessionMigratorRegistry as sessionMigratorRegistry } from "#system/schema-migrators/migrator-registry";
 import { Z$SessionSaveData } from "#system/schemas/session-save-data";
 import type { VersionTuple } from "#types/migrators/migrators";
+import type { SessionSaveData } from "#types/save-data";
 import { z } from "zod";
 
 /**
@@ -23,7 +24,7 @@ const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
  *
  * @throws {SessionMigrationError} if migration fails
  */
-export function parseSessionData(data: any): z.output<typeof Z$SessionSaveData> {
+export function parseSessionData(data: any): SessionSaveData {
   const version = data["gameVersion"];
   const invalidMsg = "Invalid or missing game version in save data";
   if (typeof version !== "string") {
@@ -36,6 +37,10 @@ export function parseSessionData(data: any): z.output<typeof Z$SessionSaveData> 
   }
 
   const versionTuple = versionMatch.slice(1).map(Number) as VersionTuple;
+
+  if (data == null || typeof data !== "object") {
+    throw new SessionMigrationError("Invalid save data: expected an object");
+  }
 
   // If an error occurs while applying a migrator, just try to continue forward without stopping
   // the entire migration process.
@@ -52,8 +57,12 @@ export function parseSessionData(data: any): z.output<typeof Z$SessionSaveData> 
   }
 
   try {
-    return Z$SessionSaveData.parse(data);
+    // @ts-expect-error - Remove this once session migration is fully implemented
+    return Z$SessionSaveData.parse(data) as SessionSaveData;
   } catch (err) {
-    throw new SessionMigrationError("Failed to parse session save data", { cause: err });
+    if (err instanceof z.ZodError) {
+      throw new SessionMigrationError(`Failed to parse session save data after migration: ${err.message}`);
+    }
+    throw err;
   }
 }
