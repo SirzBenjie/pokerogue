@@ -1387,6 +1387,9 @@ export class BattleScene extends SceneBase {
         fixedDouble = fromSession.enemyParty.length > 1;
         break;
       case BattleType.TRAINER: {
+        if (!trainerData) {
+          throw new Error("Trainer battle save data must include trainer information!");
+        }
         const config = trainerConfigs[trainerData.trainerType];
         fixedDouble = config.doubleOnly || (config.hasDouble && trainerData.variant === TrainerVariant.DOUBLE);
         break;

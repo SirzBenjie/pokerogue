@@ -23,6 +23,9 @@ ls:
    src/system/version-migration/versions:
       .ts: snake_case
       <<: *cfg
+   src/system/schema-migrators:
+      .ts: snake_case | kebab-case
+      <<: *cfg
    test: *src
 ignore:
    - .pnpm-store

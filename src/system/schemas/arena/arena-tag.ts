@@ -152,6 +152,8 @@ const Z$PendingHealTag = /** __@PURE__ */ z.object({
   ),
 }) satisfies z.ZodType<NonFunctionProperties<PendingHealTag>>;
 
+export type Z$PendingHealTagType = z.infer<typeof Z$PendingHealTag>["tagType"];
+
 /**
  * Zod schema for {@linkcode SerializableArenaTag}s as of version 1.10,
  * also permitting "NoneTag".
