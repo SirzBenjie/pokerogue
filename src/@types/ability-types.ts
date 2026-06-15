@@ -9,6 +9,8 @@ export type * from "#abilities/ab-attrs";
 
 export type AbAttrCondition = (pokemon: Pokemon) => boolean;
 export type PokemonAttackCondition = (user: Pokemon, target: Pokemon | null, move: Move) => boolean;
+/** Same as {@linkcode PokemonAttackCondition} but but the target is required */
+export type TargetedPokemonAttackCondition = (user: Pokemon, target: Pokemon, move: Move) => boolean;
 export type PokemonDefendCondition = (target: Pokemon, user: Pokemon, move: Move) => boolean;
 export type PokemonStatStageChangeCondition = (
   target: Pokemon,

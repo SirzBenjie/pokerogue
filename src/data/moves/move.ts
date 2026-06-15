@@ -915,14 +915,6 @@ export abstract class Move implements Localizable {
           // by another move, such as via metronome.
         }
         return this.hasFlag(MoveFlags.IGNORE_ABILITIES) && !isFollowUp;
-      case MoveFlags.IGNORE_PROTECT:
-        if (
-          user.hasAbilityWithAttr("IgnoreProtectOnContactAbAttr")
-          && this.doesFlagEffectApply({ flag: MoveFlags.MAKES_CONTACT, user })
-        ) {
-          return true;
-        }
-        break;
     }
 
     return this.hasFlag(flag);

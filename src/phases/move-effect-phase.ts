@@ -492,7 +492,7 @@ export class MoveEffectPhase extends PokemonPhase {
    * Check whether the target is protected by protect or a relevant conditional protection.
    * @param user - The {@linkcode Pokemon} using this phase's invoked move
    * @param target - The target {@linkcode Pokemon} to check for protection
-   * @returns Whether the target was protected
+   * @returns Damage multiplier for protect: 0 if move is protected against, 0.25 if partially bypassed
    */
   private protectedCheck(user: Pokemon, target: Pokemon): boolean {
     /** The {@linkcode ArenaTagSide} to which the target belongs */

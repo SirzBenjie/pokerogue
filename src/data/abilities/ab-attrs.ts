@@ -3,6 +3,7 @@ import { globalScene } from "#app/global-scene";
 import { speciesDataRegistry } from "#app/global-species-data-registry";
 import { getPokemonNameWithAffix } from "#app/messages";
 import type { EntryHazardTag, SuppressAbilitiesTag } from "#data/arena-tag";
+import { ConditionalProtectTag } from "#data/arena-tag";
 import { type BattlerTag, CritBoostTag } from "#data/battler-tags";
 import { getBerryEffectFunc } from "#data/berry";
 import { allAbilities, allMoves } from "#data/data-lists";
@@ -52,6 +53,7 @@ import type {
   PokemonAttackCondition,
   PokemonDefendCondition,
   PokemonStatStageChangeCondition,
+  TargetedPokemonAttackCondition,
 } from "#types/ability-types";
 import type { Move, StatusEffectAttr } from "#types/move-types";
 import type { Closed, Exact, Mutable } from "#types/type-helpers";
@@ -59,6 +61,7 @@ import { coerceArray } from "#utils/array";
 import { BooleanHolder, NumberHolder, randSeedFloat, randSeedInt, randSeedItem, toDmgValue } from "#utils/common";
 import { inSpeedOrder } from "#utils/speed-order-generator";
 import { toCamelCase } from "#utils/strings";
+import { ValueHolder } from "#utils/value-holder";
 import i18next from "i18next";
 import type { NonEmptyTuple } from "type-fest";
 
@@ -1469,12 +1472,12 @@ export interface PreAttackModifyDamageAbAttrParams extends AugmentMoveInteractio
  */
 export class MoveDamageBoostAbAttr extends PreAttackAbAttr {
   private readonly damageMultiplier: number;
-  private readonly condition: PokemonAttackCondition;
+  protected readonly condition: TargetedPokemonAttackCondition;
 
   // TODO: This should not take a `PokemonAttackCondition` (with nullish parameters)
   // as it's effectively offloading nullishness checks to its child attributes
-  constructor(damageMultiplier: number, condition: PokemonAttackCondition) {
-    super(false);
+  constructor(damageMultiplier: number, condition: TargetedPokemonAttackCondition, showAbility = false) {
+    super(showAbility);
     this.damageMultiplier = damageMultiplier;
     this.condition = condition;
   }
@@ -1485,6 +1488,50 @@ export class MoveDamageBoostAbAttr extends PreAttackAbAttr {
 
   override apply({ damage: power }: PreAttackModifyDamageAbAttrParams): void {
     power.value = toDmgValue(power.value * this.damageMultiplier);
+  }
+}
+
+/**
+ * Ability attribute implementing the damage reduction portion of abilities like Unseen Fist.
+ */
+export class HitThroughProtectDamageReductionAbAttr extends MoveDamageBoostAbAttr {
+  constructor(damageMultiplier = 0.25) {
+    super(
+      damageMultiplier,
+      (pokemon, opponent, move) => {
+        // Check if the move makes contact
+        if (!move.doesFlagEffectApply({ flag: MoveFlags.MAKES_CONTACT, user: pokemon, target: opponent })) {
+          return false;
+        }
+
+        const isProtected = new ValueHolder(false);
+        const bypassIgnoreProtect = new ValueHolder(false);
+        globalScene.arena.applyTagsForSide(
+          ConditionalProtectTag,
+          pokemon.isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY,
+          true,
+          isProtected,
+          pokemon,
+          opponent,
+          move.id,
+          bypassIgnoreProtect,
+        );
+
+        if (isProtected.value && !bypassIgnoreProtect.value) {
+          return false;
+        }
+
+        return true;
+      },
+      true,
+    );
+  }
+
+  override getTriggerMessage({ pokemon }: PreAttackModifyDamageAbAttrParams, abilityName: string): string {
+    return i18next.t("abilityTriggers:hitThroughProtectDamageReduction", {
+      pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      abilityName,
+    });
   }
 }
 
@@ -5169,8 +5216,14 @@ export class MoveAbilityBypassAbAttr extends AbAttr {
 }
 
 /** Attribute for abilities that allow moves that make contact to ignore protection (i.e. Unseen Fist) */
-export class IgnoreProtectOnContactAbAttr extends AbAttr {
+export class HitThroughProtectOnContactAbAttr extends AbAttr {
   private declare readonly _: never;
+
+  constructor() {
+    super(false);
+  }
+
+  override canApply({ move });
 }
 
 export interface InfiltratorAbAttrParams extends AbAttrBaseParams {
@@ -6089,7 +6142,7 @@ export const AbilityAttrs = Object.freeze({
   IgnoreContactAbAttr,
   IgnoreMoveEffectsAbAttr,
   IgnoreOpponentStatStagesAbAttr,
-  IgnoreProtectOnContactAbAttr,
+  HitThroughProtectOnContactAbAttr,
   IgnoreTypeImmunityAbAttr,
   IgnoreTypeStatusEffectImmunityAbAttr,
   IllusionBreakAbAttr,

@@ -48,11 +48,11 @@ import {
   GorillaTacticsAbAttr,
   getWeatherCondition,
   HealFromBerryUseAbAttr,
+  HitThroughProtectOnContactAbAttr,
   IceFaceFormChangeAbAttr,
   IgnoreContactAbAttr,
   IgnoreMoveEffectsAbAttr,
   IgnoreOpponentStatStagesAbAttr,
-  IgnoreProtectOnContactAbAttr,
   IgnoreTypeImmunityAbAttr,
   IgnoreTypeStatusEffectImmunityAbAttr,
   IncreasePpAbAttr,
@@ -1800,7 +1800,7 @@ export function initAbilities() {
       .attr(BypassSpeedChanceAbAttr, 30)
       .build(),
     new AbBuilder(AbilityId.UNSEEN_FIST, 8) //
-      .attr(IgnoreProtectOnContactAbAttr)
+      .attr(HitThroughProtectOnContactAbAttr)
       .attr(
         MoveDamageBoostAbAttr,
         0.25,

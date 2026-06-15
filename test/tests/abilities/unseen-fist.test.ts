@@ -2,6 +2,7 @@ import { AbilityId } from "#enums/ability-id";
 import { BattlerTagType } from "#enums/battler-tag-type";
 import { MoveId } from "#enums/move-id";
 import { SpeciesId } from "#enums/species-id";
+import { Stat } from "#enums/stat";
 import { GameManager } from "#test/framework/game-manager";
 import Phaser from "phaser";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -58,6 +59,30 @@ describe("Abilities - Unseen Fist", () => {
 
     expect(enemyPokemon.getTag(BattlerTagType.SUBSTITUTE)).toBeUndefined();
     expect(enemyPokemon.hp).toBe(enemyPokemon.getMaxHp());
+  });
+
+  it("should still cause user to receive the effect of spiky shield", async () => {
+    game.override.enemyMoveset(MoveId.SPIKY_SHIELD);
+    await game.classicMode.startBattle(SpeciesId.FEEBAS);
+
+    const attacker = game.field.getPlayerPokemon();
+
+    game.move.use(MoveId.TACKLE);
+    await game.phaseInterceptor.to("TurnEndPhase", false);
+
+    expect(attacker).not.toHaveFullHp();
+  });
+
+  it("should still cause user to receive the effect of King's Shield", async () => {
+    game.override.enemyMoveset(MoveId.KINGS_SHIELD);
+    await game.classicMode.startBattle(SpeciesId.FEEBAS);
+
+    const attacker = game.field.getPlayerPokemon();
+
+    game.move.use(MoveId.TACKLE);
+    await game.phaseInterceptor.to("TurnEndPhase", false);
+
+    expect(attacker).toHaveStatStage(Stat.ATK, -1);
   });
 });
 
