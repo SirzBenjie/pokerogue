@@ -53,6 +53,13 @@ function convertSystemDataStr(dataStr: string): string {
   return dataStr;
 }
 
+function abbreviateSystemDataStr(dataStr: string): string {
+  for (const [fullKey, abbreviated] of Object.entries(systemShortKeys)) {
+    dataStr = dataStr.replace(new RegExp(`${fullKey.replace("$", "\\$")}`, "g"), abbreviated);
+  }
+  return dataStr;
+}
+
 /**
  * Decrypt a save file.
  * @param path - The path to the encrypted save file
@@ -80,7 +87,32 @@ function decryptSave(path: string): string | undefined {
     process.exitCode = 1;
     return;
   }
-  return convertSystemDataStr(AES.decrypt(fileData, SAVE_KEY).toString(enc.Utf8));
+  return convertSystemDataStr(AES.decrypt(fileData, SAVE_KEY).toString(enc.Utf8)).toString();
+}
+
+function encryptSave(path: string): string | undefined {
+  let fileData: string;
+  try {
+    fileData = fs.readFileSync(path, "utf8");
+  } catch (e) {
+    const err = e as NodeJS.ErrnoException;
+    switch (err.code) {
+      case "ENOENT":
+        console.error(`File not found: ${path}`);
+        break;
+      case "EACCES":
+        console.error(`Could not open ${path}: Permission denied`);
+        break;
+      case "EISDIR":
+        console.error(`Unable to read ${path} as it is a directory`);
+        break;
+      default:
+        console.error(`Error reading file: ${err.message}`);
+    }
+    process.exitCode = 1;
+    return;
+  }
+  return AES.encrypt(abbreviateSystemDataStr(fileData), SAVE_KEY).toString();
 }
 
 /**
@@ -111,6 +143,8 @@ const program = new Command("pnpm decrypt-save")
   .description("Decrypt an encrypted pokerogue save file.")
   .helpOption("-h, --help", "Show this help message.")
   .version(version, "-v, --version", "Show the version number.")
+  .option("-e, --encrypt", "Encrypt a save file instead of decrypting it.")
+  .option("-f, --force", "Force overwrite of existing files.")
   .argument("<encrypted-file>", "Path to the encrypted save file to decrypt.")
   .argument("[save-file]", "Path to write the decrypted data. If omitted, prints to stdout.")
   .configureHelp(defaultCommanderHelpArgs)
@@ -119,17 +153,31 @@ const program = new Command("pnpm decrypt-save")
 
 const [encryptedFile, saveFile] = program.processedArgs;
 
-if (saveFile !== undefined && fs.existsSync(saveFile)) {
+if (!program.opts().force && saveFile !== undefined && fs.existsSync(saveFile)) {
   program.error(`Refusing to overwrite existing file: ${saveFile}`);
 }
 
-const decrypted = decryptSave(encryptedFile);
-if (!decrypted) {
-  process.exit(process.exitCode ?? 1);
-}
+if (program.opts().encrypt) {
+  console.log("Encrypting save file...");
+  const encrypted = encryptSave(encryptedFile);
+  if (!encrypted) {
+    process.exit(process.exitCode ?? 1);
+  }
 
-if (saveFile === undefined) {
-  process.stdout.write(decrypted);
+  if (saveFile === undefined) {
+    process.stdout.write(encrypted);
+  } else {
+    writeToFile(saveFile, encrypted);
+  }
 } else {
-  writeToFile(saveFile, decrypted);
+  const decrypted = decryptSave(encryptedFile);
+  if (!decrypted) {
+    process.exit(process.exitCode ?? 1);
+  }
+
+  if (saveFile === undefined) {
+    process.stdout.write(decrypted);
+  } else {
+    writeToFile(saveFile, decrypted);
+  }
 }
