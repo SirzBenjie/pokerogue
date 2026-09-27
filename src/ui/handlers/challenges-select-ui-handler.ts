@@ -11,7 +11,7 @@ import { UiHandler } from "#ui/ui-handler";
 import { addWindow } from "#ui/ui-theme";
 import { getLocalizedSpriteKey } from "#utils/common";
 import i18next from "i18next";
-import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
+import BBCodeText from "phaser4-rex-plugins/plugins/bbcodetext";
 
 type ChallengeLabel = {
   label: Phaser.GameObjects.Text;

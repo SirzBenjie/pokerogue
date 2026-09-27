@@ -116,9 +116,6 @@ importers:
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@24.13.3)(typescript@6.0.3)
-      phaser3spectorjs:
-        specifier: ^0.0.8
-        version: 0.0.8
       type-fest:
         specifier: ^5.9.0
         version: 5.9.0
@@ -1473,9 +1470,6 @@ packages:
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
-
-  phaser3spectorjs@0.0.8:
-    resolution: {integrity: sha512-0dSO7/aMjEUPrp5EcjRvRRsEf+jXDbmzalPeJ6VtTB2Pn1PeaKc+qlL/DmO3l1Dvc5lkzc+Sil1Ta+Hkyi5cbA==}
 
   phaser4-rex-plugins@4.2.0:
     resolution: {integrity: sha512-Wc5pSEbz3iv5FJpxG/TXHzDK5YM3skHjeL4CHjd92h0BvsOCvJ6dxP30M7xVWDsLLPKKLQOFE9L2b8Dez5nwAw==}
@@ -3220,8 +3214,6 @@ snapshots:
   path-to-regexp@6.3.0: {}
 
   pathe@2.0.3: {}
-
-  phaser3spectorjs@0.0.8: {}
 
   phaser4-rex-plugins@4.2.0(graphology-types@0.24.8):
     dependencies:
