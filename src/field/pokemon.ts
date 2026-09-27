@@ -528,12 +528,12 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
         true,
       );
       ret.setOrigin(0.5, 1);
-      ret.setPipeline(globalScene.spritePipeline, {
-        tone: [0.0, 0.0, 0.0, 0.0],
-        hasShadow: !!hasShadow,
-        teraColor: getTypeRgb(this.getTeraType()),
-        isTerastallized: this.isTerastallized,
-      });
+      // ret.setPipeline(globalScene.spritePipeline, {
+      //   tone: [0.0, 0.0, 0.0, 0.0],
+      //   hasShadow: !!hasShadow,
+      //   teraColor: getTypeRgb(this.getTeraType()),
+      //   isTerastallized: this.isTerastallized,
+      // });
       return ret;
     };
 
@@ -1212,8 +1212,8 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
     [this.getSprite(), this.getTintSprite()]
       .filter(s => !!s)
       .forEach(s => {
-        s.pipelineData["teraColor"] = getTypeRgb(this.getTeraType());
-        s.pipelineData["isTerastallized"] = this.isTerastallized;
+        // s.pipelineData["teraColor"] = getTypeRgb(this.getTeraType());
+        // s.pipelineData["isTerastallized"] = this.isTerastallized;
       });
     await this.updateInfo(true);
   }
@@ -5446,9 +5446,9 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
     if (!this.getFusionSpeciesForm(ignoreOverride)) {
       [this.getSprite(), this.getTintSprite()]
         .filter(s => !!s)
-        .map(s => {
-          s.pipelineData[`spriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = [];
-          s.pipelineData[`fusionSpriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = [];
+        .forEach(s => {
+          // s.pipelineData[`spriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = [];
+          // s.pipelineData[`fusionSpriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = [];
         });
       return;
     }
@@ -5758,9 +5758,9 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
     [this.getSprite(), this.getTintSprite()]
       .filter(s => !!s)
       .forEach(s => {
-        s.pipelineData[`spriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = spriteColors;
-        s.pipelineData[`fusionSpriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] =
-          fusionSpriteColors;
+        // s.pipelineData[`spriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] = spriteColors;
+        // s.pipelineData[`fusionSpriteColors${ignoreOverride && this.summonData.speciesForm ? "Base" : ""}`] =
+        //   fusionSpriteColors;
       });
 
     canvas.remove();
