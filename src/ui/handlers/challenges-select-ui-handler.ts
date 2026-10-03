@@ -11,7 +11,7 @@ import { UiHandler } from "#ui/ui-handler";
 import { addWindow } from "#ui/ui-theme";
 import { getLocalizedSpriteKey } from "#utils/common";
 import i18next from "i18next";
-import BBCodeText from "phaser4-rex-plugins/plugins/bbcodetext";
+import type BBCodeText from "phaser4-rex-plugins/plugins/bbcodetext";
 
 type ChallengeLabel = {
   label: Phaser.GameObjects.Text;
@@ -114,13 +114,14 @@ export class GameChallengesUiHandler extends UiHandler {
       .setOrigin(0)
       .setPositionRelative(this.optionsBg, this.optionsBg.width, 0);
 
-    this.descriptionText = new BBCodeText(globalScene, descriptionBg.x + 6, descriptionBg.y + 4, "", {
-      fontFamily: "emerald",
-      fontSize: 84,
-      color: Color.ORANGE,
-      padding: { bottom: 6 },
-      wrap: { mode: "word", width: (descriptionBg.width - 12) * 6 },
-    })
+    this.descriptionText = globalScene.add
+      .rexBBCodeText(descriptionBg.x + 6, descriptionBg.y + 4, "", {
+        fontFamily: "emerald",
+        fontSize: 84,
+        color: Color.ORANGE,
+        padding: { bottom: 6 },
+        wrap: { mode: "word", width: (descriptionBg.width - 12) * 6 },
+      })
       .setName("text-desc")
       .setScale(1 / 6)
       .setShadow(4, 5, ShadowColor.ORANGE)
