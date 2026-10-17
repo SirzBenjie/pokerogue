@@ -29,6 +29,7 @@ import {
   ExposedTag,
   getBattlerTag,
   HighestStatBoostTag,
+  MoveLockTag,
   MoveRestrictionBattlerTag,
   PowerTrickTag,
   SemiInvulnerableTag,
@@ -6812,6 +6813,12 @@ export class EnemyPokemon extends Pokemon {
 
     // We went through the entire queue without a match; clear the entire thing.
     this.summonData.moveQueue = [];
+
+    // If this Pokemon is locked into a move (e.g. Outrage), use it.
+    const lockedMove = this.getTag(MoveLockTag)?.sourceMove;
+    if (lockedMove != null) {
+      return { move: lockedMove, targets: this.getNextTargets(lockedMove), useMode: MoveUseMode.IGNORE_PP };
+    }
 
     // Filter out any moves this Pokemon cannot use
     let movePool = this.getMoveset().filter(m => m.isUsable(this, false, true)[0]);

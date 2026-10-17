@@ -60,7 +60,7 @@ export class MoveEffectPhase extends PokemonPhase {
   public readonly phaseName = "MoveEffectPhase";
   public move: Move;
   protected targets: BattlerIndex[];
-  protected useMode: MoveUseMode;
+  public readonly useMode: MoveUseMode;
 
   /** The result of the hit check against each target */
   private hitChecks: HitCheckEntry[];

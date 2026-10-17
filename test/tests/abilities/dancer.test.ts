@@ -333,8 +333,7 @@ describe("Abilities - Dancer", () => {
     expect(oricorio).toHaveStatusEffect(StatusEffect.NONE);
   });
 
-  // TODO: This more or less requires an overhaul of Frenzy moves
-  it.todo("should not lock the user into Petal Dance or reduce its duration", async () => {
+  it("should not lock the user into Petal Dance or reduce its duration", async () => {
     game.override.enemyMoveset(MoveId.PETAL_DANCE);
     await game.classicMode.startBattle(SpeciesId.ORICORIO);
 
@@ -347,7 +346,6 @@ describe("Abilities - Dancer", () => {
 
     // used petal dance without being locked in
     expect(oricorio).toHaveUsedMove({ move: MoveId.PETAL_DANCE, useMode: MoveUseMode.INDIRECT });
-    expect(oricorio.getMoveQueue()).toHaveLength(0);
     expect(oricorio).not.toHaveBattlerTag(BattlerTagType.FRENZY);
     await game.toNextTurn();
 
@@ -356,13 +354,12 @@ describe("Abilities - Dancer", () => {
     game.setTurnOrder([BattlerIndex.PLAYER, BattlerIndex.ENEMY]);
     await game.phaseInterceptor.to("MoveEndPhase");
 
-    const prevQueueLength = oricorio.getMoveQueue().length;
+    const { turnCount } = oricorio.getTag(BattlerTagType.FRENZY)!;
 
     await game.toEndOfTurn();
 
     // should not have ticked down petal dance the 2nd time
-    expect(oricorio.getMoveQueue()).toHaveLength(prevQueueLength);
-    expect(oricorio).toHaveBattlerTag(BattlerTagType.FRENZY);
+    expect(oricorio).toHaveBattlerTag({ tagType: BattlerTagType.FRENZY, turnCount });
     expect(oricorio).toHaveUsedPP(MoveId.PETAL_DANCE, 1);
   });
 

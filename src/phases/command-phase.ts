@@ -3,7 +3,7 @@ import { globalScene } from "#app/global-scene";
 import { settings } from "#app/global-settings-manager";
 import { speciesDataRegistry } from "#app/global-species-data-registry";
 import { getPokemonNameWithAffix } from "#app/messages";
-import { TrappedTag } from "#data/battler-tags";
+import { MoveLockTag, TrappedTag } from "#data/battler-tags";
 import { getDailyEventSeedBoss } from "#data/daily-run";
 import { isDailyFinalBoss } from "#data/daily-seed-utils";
 import { AbilityId } from "#enums/ability-id";
@@ -167,6 +167,28 @@ export class CommandPhase extends FieldPhase {
     return true;
   }
 
+  /**
+   * Attempt to execute the move this Pokemon is locked into by a {@linkcode MoveLockTag} (e.g. Outrage).
+   * @returns Whether the locked move was set to be executed.
+   */
+  private tryExecuteLockedMove(): boolean {
+    const playerPokemon = this.getPokemon();
+    const lockedMove = playerPokemon.getTag(MoveLockTag)?.sourceMove;
+    if (lockedMove == null) {
+      return false;
+    }
+
+    // The locked move need not be in the moveset (e.g. if it was called by Metronome),
+    // so it is passed explicitly instead of selected via the cursor
+    const useMode = MoveUseMode.IGNORE_PP;
+    this.handleCommand(Command.FIGHT, -1, useMode, {
+      move: lockedMove,
+      targets: getMoveTargets(playerPokemon, lockedMove).targets,
+      useMode,
+    });
+    return true;
+  }
+
   public override start(): void {
     super.start();
 
@@ -184,7 +206,7 @@ export class CommandPhase extends FieldPhase {
       return;
     }
 
-    if (this.tryExecuteQueuedMove()) {
+    if (this.tryExecuteQueuedMove() || this.tryExecuteLockedMove()) {
       return;
     }
 

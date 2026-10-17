@@ -904,7 +904,7 @@ export class MovePhase extends PokemonPhase {
       "MoveEndPhase",
       this.pokemon.getBattlerIndex(),
       this.getActiveTargetPokemon(),
-      isVirtual(this.useMode),
+      this.useMode,
     );
 
     super.end();

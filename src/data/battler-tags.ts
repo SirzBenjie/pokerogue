@@ -1618,13 +1618,29 @@ export class PowderTag extends BattlerTag {
 /**
  * Base class for tags that lock the holder into repeatedly using a single move.
  *
- * On each {@linkcode BattlerTagLapseType.AFTER_MOVE | AFTER_MOVE} lapse the tag ticks down and,
- * while still active, queues the holder's next use of the locked move with freshly-selected targets.
- * If the move fails, misses, or is otherwise interrupted, the tag is removed and no further use is queued.
+ * On each {@linkcode BattlerTagLapseType.AFTER_MOVE | AFTER_MOVE} lapse the tag ticks down.
+ * If the move fails, misses, or is otherwise interrupted, the tag is removed.
+ *
+ * While the tag is present, the holder's command phase issues the tag's {@linkcode sourceMove} automatically
+ * (whether or not it is in the holder's moveset), selecting its targets against the field at that time.
+ * Effects that prevent the move from being used (e.g. Disable) cancel it in the `MovePhase`, ending the lock.
+ * @remarks
+ * Targets are currently always re-selected via the move's normal targeting, which is only correct
+ * for moves that pick a random target (e.g. {@linkcode MoveTarget.RANDOM_NEAR_ENEMY}).
+ * Single-target locking moves (e.g. Rollout) would instead need to reuse their previous target.
  */
 export abstract class MoveLockTag extends SerializableBattlerTag {
   constructor(tagType: BattlerTagType, turnCount: number, sourceMove: MoveId) {
     super(tagType, BattlerTagLapseType.AFTER_MOVE, turnCount, sourceMove);
+  }
+
+  /**
+   * Moves copied by {@linkcode AbilityId.DANCER | Dancer} do not lock the user in.
+   * @returns Whether the tag can be added
+   */
+  public override canAdd(_pokemon: Pokemon): boolean {
+    const currentPhase = globalScene.phaseManager.getCurrentPhase();
+    return !(currentPhase.is("MoveEffectPhase") && currentPhase.useMode === MoveUseMode.INDIRECT);
   }
 
   public override lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
@@ -1637,36 +1653,7 @@ export abstract class MoveLockTag extends SerializableBattlerTag {
       return true;
     }
 
-    const ret =
-      super.lapse(pokemon, lapseType) && lastMove.targets.length > 0 && lastMove.result === MoveResult.SUCCESS;
-
-    // While the lock persists, queue next turn's use of the move with fresh target selection.
-    if (ret) {
-      const nextTargets = this.getNextTargets(pokemon, allMoves[sourceMove], lastMove.targets);
-      pokemon.pushMoveQueue({ move: sourceMove, targets: nextTargets, useMode: MoveUseMode.IGNORE_PP });
-    }
-
-    return ret;
-  }
-
-  /**
-   * Determine the target(s) for the move queued by this tag on the following turn.
-   * @param pokemon - The {@linkcode Pokemon} holding this tag
-   * @param move - The {@linkcode Move} queued by this tag
-   * @param lastTargets - The target(s) hit by the holder's most recent use of the move
-   * @returns The {@linkcode BattlerIndex}es targeted by the next use of the move.
-   */
-  // TODO: move target acquisition into `MovePhase`
-  protected getNextTargets(pokemon: Pokemon, move: Move, lastTargets: BattlerIndex[]): BattlerIndex[] {
-    // Re-roll a random target each turn so frenzy moves don't lock onto a single
-    // enemy for their whole duration in battles with multiple opponents.
-    if (move.moveTarget === MoveTarget.RANDOM_NEAR_ENEMY) {
-      const { targets } = getMoveTargets(pokemon, move.id);
-      if (targets.length > 0) {
-        return targets;
-      }
-    }
-    return lastTargets;
+    return super.lapse(pokemon, lapseType) && lastMove.targets.length > 0 && lastMove.result === MoveResult.SUCCESS;
   }
 }
 

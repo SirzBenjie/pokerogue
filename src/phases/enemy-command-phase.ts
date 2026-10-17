@@ -1,4 +1,5 @@
 import { globalScene } from "#app/global-scene";
+import { MoveLockTag } from "#data/battler-tags";
 import { AbilityId } from "#enums/ability-id";
 import { BattlerIndex } from "#enums/battler-index";
 import { BattlerTagType } from "#enums/battler-tag-type";
@@ -55,7 +56,7 @@ export class EnemyCommandPhase extends FieldPhase {
      * member's matchup score is 3x the active enemy's score (or 2x for "boss" trainers),
      * the enemy will switch to that Pokemon.
      */
-    if (trainer && enemyPokemon.getMoveQueue().length === 0) {
+    if (trainer && enemyPokemon.getMoveQueue().length === 0 && !enemyPokemon.getTag(MoveLockTag)) {
       const opponents = enemyPokemon.getOpponents();
 
       if (!enemyPokemon.isTrapped()) {
